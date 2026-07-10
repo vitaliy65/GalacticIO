@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/Tile_UI/hover_rule.uss?fileID=7433441132597879392&amp;guid=18a70e4520ddf2a42a5835e001f23907&amp;type=3#hover_rule"/>
+    <ui:VisualElement name="VisualElement" class="container" style="flex-grow: 1; background-image: none; scale: 1 1; transition-duration: 0.3s;">
+        <ui:Image source="project://database/Assets/UI/Tile_UI/building_images/test.png?fileID=2800000&amp;guid=9ff3f8f7746b0e04fbd6fe8096df9958&amp;type=3#test" name="image" data-source="" class="image" style="height: 1024px;"/>
+    </ui:VisualElement>
+</ui:UXML>

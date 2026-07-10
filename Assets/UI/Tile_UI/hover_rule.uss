@@ -1,0 +1,12 @@
+.image {
+}
+
+
+
+.image:hover {
+    scale: 1.1 1.1;
+    transition-duration: 0.15s;
+}
+
+.image:active {
+}
