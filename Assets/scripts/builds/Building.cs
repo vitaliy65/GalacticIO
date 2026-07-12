@@ -1,4 +1,3 @@
-using currency;
 using UnityEngine;
 
 namespace builds
@@ -32,11 +31,10 @@ namespace builds
                 return;
             }
 
-            if (CurrencyManager.Instance.TrySpendCoins(buildingData.BaseCost))
-            {
-                BuildingManager.Instance.AddBuilding(this);
-                hasRegistered = true;
-            }
+            // Payment already happened at the moment of purchase (see SocketData.OnClick),
+            // so by the time this MonoBehaviour exists it just needs to register itself.
+            BuildingManager.Instance.AddBuilding(this);
+            hasRegistered = true;
         }
 
         public void Upgrade()

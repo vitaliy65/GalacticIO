@@ -69,6 +69,14 @@ public class Tile : TileBehavior
         {
             foreach (Transform child in BuildAnchorPoint.transform)
             {
+                // Unregister before destroying so BuildingManager never holds on to
+                // a reference to a Building whose GameObject no longer exists.
+                Building buildingComponent = child.GetComponent<Building>();
+                if (buildingComponent != null && BuildingManager.Instance != null)
+                {
+                    BuildingManager.Instance.RemoveBuilding(buildingComponent);
+                }
+
                 Destroy(child.gameObject);
             }
         }

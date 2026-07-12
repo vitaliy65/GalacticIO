@@ -12,6 +12,17 @@ public class BuildingSelectorWheel : MonoBehaviour
     private TileBehavior selectedTile;
     private bool isSubscribed;
 
+    private void Awake()
+    {
+        if (Instance && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+
+        Instance = this;
+    }
+
     private void OnEnable()
     {
         SubscribeToSelectionManager();
@@ -26,6 +37,14 @@ public class BuildingSelectorWheel : MonoBehaviour
     private void OnDisable()
     {
         UnsubscribeFromSelectionManager();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     private void Update()

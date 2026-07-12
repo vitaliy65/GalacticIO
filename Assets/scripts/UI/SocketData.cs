@@ -9,12 +9,18 @@ public class SocketData : MonoBehaviour
 
     public void OnClick()
     {
-        bool canBuy = CurrencyManager.Instance.CanBuyByCoins(buildingData.BaseCost);
-
-        if (canBuy && TileSelectionManager.SelectedTileGlobal && buildingData)
+        if (!buildingData || !TileSelectionManager.SelectedTileGlobal)
         {
-            TileSelectionManager.SelectedTileGlobal.OnTilePlaced(buildingData);
-            TileSelectionManager.Instance?.RequestMenuHide();
+            return;
         }
+
+        if (!CurrencyManager.Instance.TrySpendCoins(buildingData.BaseCost))
+        {
+            return;
+        }
+
+        TileSelectionManager.SelectedTileGlobal.OnTilePlaced(buildingData);
+        TileSelectionManager.Instance?.RequestMenuHide();
+        UIManager.Instance.RefreshCurrencyText();
     }
 }

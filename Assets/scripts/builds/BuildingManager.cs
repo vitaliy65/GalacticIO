@@ -48,6 +48,13 @@ namespace builds
             while (enabled)
             {
                 yield return new WaitForSeconds(incomeRefreshInterval);
+
+                // Buildings can be destroyed (tile removed) without going through
+                // RemoveBuilding, so prune stale/null entries before summing income.
+                // Doing this here avoids a MissingReferenceException from a destroyed
+                // Building silently killing this coroutine forever.
+                builtBuildings.RemoveAll(building => !building);
+
                 int totalIncome = 0;
 
                 foreach (var building in builtBuildings)
@@ -73,13 +80,37 @@ namespace builds
             }
         }
 
+        public void RemoveBuilding(Building building)
+        {
+            if (!building)
+            {
+                return;
+            }
+
+            builtBuildings.Remove(building);
+        }
+
         private void ApplyIncome(int totalIncome)
         {
+            if (totalIncome <= 0)
+            {
+                return;
+            }
+
             CurrencyManager.Instance.AddCoins(totalIncome);
         }
 
         public int CalculateIncome(Building building, ResourceData resourceData)
         {
+            // A building can be placed on a tile that has no resource assigned
+            // (e.g. resourceData was never wired up on that tile). Treat that as
+            // zero income instead of throwing, so one misconfigured tile can't
+            // permanently stop income for every other building in the game.
+            if (!building || resourceData == null)
+            {
+                return 0;
+            }
+
             return (int)(building.GetModifier() * resourceData.Income);
         }
 
