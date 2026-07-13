@@ -62,8 +62,8 @@ public class BuildingSelectorMenu : Menu
         selectedTile = tile;
         ConfigureSockets(tile);
 
-        if (tile == null || tile.StaticTileData == null ||
-            tile.StaticTileData.Type == TileTypes.Ground ||
+        if (tile == null || tile.TileData == null ||
+            tile.TileData.Type == TileTypes.Ground ||
             tile.TileState == TileStates.Occupied)
         {
             HideMenu();
@@ -106,15 +106,15 @@ public class BuildingSelectorMenu : Menu
     {
         int activeCount = 6;
 
-        if (tile == null || tile.StaticTileData == null)
+        if (tile == null || tile.TileData == null)
         {
             activeCount = 0;
         }
-        else if (tile.StaticTileData.Type == TileTypes.Ore)
+        else if (tile.TileData.Type == TileTypes.Ore)
         {
-            switch (tile.StaticTileData.Resource)
+            switch (tile.TileResourceData.TileResource)
             {
-                case TileResources.copper:
+                case TileResources.Copper:
                     activeCount = 1;
                     break;
                 case TileResources.Iron:

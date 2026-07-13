@@ -54,7 +54,7 @@ public class Tile : TileBehavior
         if (TileState == TileStates.Empty)
         {
             GameObject currentBuilding = Instantiate(building.BuildingData.BuildingPrefab, BuildAnchorPoint.transform, false);
-            currentBuilding.GetComponent<Building>().IsPlacedOnResource = resourceData;
+            currentBuilding.GetComponent<Building>().IsPlacedOnResource = tileResourceData;
             TileBuilding = currentBuilding.GetComponent<Building>();
         }
 

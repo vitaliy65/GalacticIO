@@ -9,14 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7afb04bb5b7e01449253078bceb4839, type: 3}
-  m_Name: Tile_copper
-  m_EditorClassIdentifier: Assembly-CSharp::tiles.TileScriptable
-  tileType: 3
-  tileState: 0
-  tileBuilding: 0
+  m_Script: {fileID: 11500000, guid: f37ce81354615864aa17790a9c9320f4, type: 3}
+  m_Name: CopperOre
+  m_EditorClassIdentifier: Assembly-CSharp::builds.ResourceData
+  resourceName: Copper Ore
+  icon: {fileID: 0}
+  income: 8
   tileResource: 1
-  _isWalkable: 1
-  _isDestructible: 1
-  _canBePlacedOn: 1
-  _health: 100

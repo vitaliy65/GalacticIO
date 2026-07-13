@@ -51,8 +51,8 @@ public class EditSelectorMenu : Menu
     {
         selectedTile = tile;
 
-        if (!tile || !tile.StaticTileData ||
-            tile.StaticTileData.Type == TileTypes.Ground ||
+        if (!tile || !tile.TileData ||
+            tile.TileData.Type == TileTypes.Ground ||
             tile.TileState == TileStates.Empty)
         {
             HideMenu();

@@ -10,13 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7afb04bb5b7e01449253078bceb4839, type: 3}
-  m_Name: Tile_ground
+  m_Name: GroundTile
   m_EditorClassIdentifier: Assembly-CSharp::Tile
   tileType: 0
-  tileState: 0
-  tileBuilding: 0
-  tileResource: 0
-  _isWalkable: 1
-  _isDestructible: 0
   _canBePlacedOn: 0
-  _health: 100
+  _health: 0

@@ -1,12 +1,21 @@
 namespace tiles
 {
+    public enum TileBiomes
+    {
+        Desert,
+        Forest,
+        Grassland,
+        Mountain,
+        Ocean,
+        Tundra,
+    }
+
     public enum TileTypes
     {
         Ground,
         Forest,
         Water,
         Ore,
-        Build,
     }
 
     public enum TileStates
@@ -25,7 +34,7 @@ namespace tiles
     public enum TileResources
     {
         None,
-        copper,
+        Copper,
         Iron,
         Gold,
         Silver,

@@ -21,13 +21,13 @@ namespace tiles
         }
 
         [SerializeField]
-        protected TileScriptable staticTileData;
+        protected TileScriptable tileData;
         [SerializeField]
         protected TileStates tileState = TileStates.Empty;
         [SerializeField]
         protected Building tileBuilding = null;
         [SerializeField]
-        protected ResourceData resourceData;
+        protected ResourceData tileResourceData;
         [SerializeField]
         protected Material SelectedMaterial;
         [SerializeField]
@@ -40,9 +40,20 @@ namespace tiles
         public bool isSelected { get; set; }
         public bool isHovered { get; set; }
 
+
+        public float Height { get; private set; }
+        public float Heat { get; private set; }
+
+        public void SetGeneratedMapData(float height, float heat)
+        {
+            Height = height;
+            Heat = heat;
+        }
+
         // Expose read-only accessors so other systems can decide UI/logic without
         // changing the protected serialized fields directly.
-        public TileScriptable StaticTileData => staticTileData;
+        public TileScriptable TileData => tileData;
+        public ResourceData TileResourceData => tileResourceData;
         public TileStates TileState
         {
             get => tileState;
