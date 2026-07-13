@@ -80,14 +80,24 @@ namespace builds
             }
         }
 
-        public void RemoveBuilding(Building building)
+        public bool RemoveBuilding(Building building)
         {
             if (!building)
             {
-                return;
+                return false;
             }
 
-            builtBuildings.Remove(building);
+
+            if (builtBuildings.Count == 1)
+            {
+                CurrencyManager.Instance.AddCoins(CurrencyManager.Instance.StartingCoinBalance);
+            }
+            else
+            {
+                CurrencyManager.Instance.AddCoins(building.GetSellValue());
+            }
+
+            return builtBuildings.Remove(building);
         }
 
         private void ApplyIncome(int totalIncome)
@@ -114,14 +124,14 @@ namespace builds
             return (int)(building.GetModifier() * resourceData.Income);
         }
 
-        public void UpgradeBuilding(Building building)
+        public bool UpgradeBuilding(Building building)
         {
             if (building == null || !builtBuildings.Contains(building))
             {
-                return;
+                return false;
             }
 
-            building.Upgrade();
+            return building.TryUpgrade();
         }
     }
 }

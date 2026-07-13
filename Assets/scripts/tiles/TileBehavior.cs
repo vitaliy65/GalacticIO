@@ -25,7 +25,7 @@ namespace tiles
         [SerializeField]
         protected TileStates tileState = TileStates.Empty;
         [SerializeField]
-        protected BuildingData tileBuilding = null;
+        protected Building tileBuilding = null;
         [SerializeField]
         protected ResourceData resourceData;
         [SerializeField]
@@ -48,7 +48,7 @@ namespace tiles
             get => tileState;
             set => tileState = value;
         }
-        public BuildingData TileBuilding
+        public Building TileBuilding
         {
             get => tileBuilding;
             set => tileBuilding = value;
@@ -59,7 +59,7 @@ namespace tiles
         public abstract void OnTileUnselected();
         public abstract void OnTileHovered();
         public abstract void OnTileUnhovered();
-        public abstract void OnTilePlaced(BuildingData buildingData);
-        public abstract void OnTileRemoved();
+        public abstract void OnTilePlaced(Building building);
+        public abstract bool OnTileRemoved();
     }
 }

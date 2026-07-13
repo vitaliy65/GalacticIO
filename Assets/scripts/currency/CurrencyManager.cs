@@ -8,6 +8,9 @@ namespace currency
         [SerializeField] private int startingCoinBalance;
         [SerializeField] private int startingDiamondBalance;
 
+        public int StartingCoinBalance => startingCoinBalance;
+        public int StartingDiamondBalance => startingDiamondBalance;
+
         private CurrencyCosCoin cosCoin;
         private CurrencyCosDiamond cosDiamond;
 
@@ -41,9 +44,6 @@ namespace currency
 
         public bool TrySpendCoins(int amount) => CosCoin.TrySpend(amount);
         public bool TrySpendDiamonds(int amount) => CosDiamond.TrySpend(amount);
-
-        public bool CanBuyByCoins(int amount) => CosCoin.CanBuy(amount);
-        public bool CanBuyByDiamonds(int amount) => CosDiamond.CanBuy(amount);
 
         public int GetCoinsBalance() => CosCoin.Balance;
         public int GetDiamondsBalance() => CosDiamond.Balance;

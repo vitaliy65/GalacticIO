@@ -115,10 +115,10 @@ public class TileSelectionManager : MonoBehaviour
 
     private bool IsMenuHit(Collider collider)
     {
-        if (!collider || !BuildingSelectorWheel.Instance)
+        if (!collider || !BuildingSelectorMenu.Instance)
             return false;
 
-        return collider.transform.IsChildOf(BuildingSelectorWheel.Instance.transform) ||
-               collider.gameObject == BuildingSelectorWheel.Instance.gameObject;
+        return collider.transform.IsChildOf(BuildingSelectorMenu.Instance.transform) ||
+               collider.gameObject == BuildingSelectorMenu.Instance.gameObject;
     }
 }

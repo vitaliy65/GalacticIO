@@ -1,16 +1,15 @@
 using tiles;
 using UnityEngine;
 
-public class BuildingSelectorWheel : MonoBehaviour
+public class BuildingSelectorMenu : Menu
 {
     [SerializeField]
     private GameObject buildingSelectionMenu;
     [SerializeField]
     private GameObject[] buildingSelectionMenuSockets = new GameObject[6];
-    public static BuildingSelectorWheel Instance { get; private set; }
+    public static BuildingSelectorMenu Instance { get; private set; }
 
-    private TileBehavior selectedTile;
-    private bool isSubscribed;
+    // selectedTile and isSubscribed provided by base Menu
 
     private void Awake()
     {
@@ -23,82 +22,20 @@ public class BuildingSelectorWheel : MonoBehaviour
         Instance = this;
     }
 
-    private void OnEnable()
-    {
-        SubscribeToSelectionManager();
-    }
-
-    private void Start()
-    {
-        SubscribeToSelectionManager();
-        SyncSelection(TileSelectionManager.SelectedTileGlobal);
-    }
-
-    private void OnDisable()
-    {
-        UnsubscribeFromSelectionManager();
-    }
-
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
         if (Instance == this)
         {
             Instance = null;
         }
+        base.OnDestroy();
     }
 
-    private void Update()
+    protected override void Update() { base.Update(); }
+
+    protected override void OnLeftClick()
     {
-        SyncSelection(TileSelectionManager.SelectedTileGlobal);
-
-        if (Input.GetMouseButtonDown(1) && selectedTile != null)
-        {
-            TileSelectionManager.Instance?.ClearSelection();
-            return;
-        }
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            SelectBuildingUnderCursor();
-        }
-    }
-
-    private void SubscribeToSelectionManager()
-    {
-        if (isSubscribed || TileSelectionManager.Instance == null)
-            return;
-
-        TileSelectionManager.Instance.MoveToPositionRequested += MoveToPosition;
-        TileSelectionManager.Instance.HideMenuRequested += HideMenu;
-        TileSelectionManager.Instance.ShowMenuRequested += ShowMenu;
-        isSubscribed = true;
-    }
-
-    private void UnsubscribeFromSelectionManager()
-    {
-        if (!isSubscribed || TileSelectionManager.Instance == null)
-            return;
-
-        TileSelectionManager.Instance.MoveToPositionRequested -= MoveToPosition;
-        TileSelectionManager.Instance.HideMenuRequested -= HideMenu;
-        TileSelectionManager.Instance.ShowMenuRequested -= ShowMenu;
-        isSubscribed = false;
-    }
-
-    private void SyncSelection(TileBehavior tile)
-    {
-        if (selectedTile == tile)
-            return;
-
-        selectedTile = tile;
-        if (selectedTile != null)
-        {
-            ShowMenu(selectedTile);
-        }
-        else
-        {
-            HideMenu();
-        }
+        SelectBuildingUnderCursor();
     }
 
     private void SelectBuildingUnderCursor()
@@ -120,7 +57,7 @@ public class BuildingSelectorWheel : MonoBehaviour
         }
     }
 
-    public void ShowMenu(TileBehavior tile)
+    public override void ShowMenu(TileBehavior tile)
     {
         selectedTile = tile;
         ConfigureSockets(tile);
@@ -139,7 +76,7 @@ public class BuildingSelectorWheel : MonoBehaviour
         buildingSelectionMenu.SetActive(true);
     }
 
-    public void HideMenu()
+    public override void HideMenu()
     {
         selectedTile = null;
         if (buildingSelectionMenu != null)
@@ -148,7 +85,7 @@ public class BuildingSelectorWheel : MonoBehaviour
         }
     }
 
-    public void MoveToPosition(Vector3 position)
+    public override void MoveToPosition(Vector3 position)
     {
         if (buildingSelectionMenu != null)
         {
@@ -156,7 +93,7 @@ public class BuildingSelectorWheel : MonoBehaviour
         }
     }
 
-    private bool IsMenuHit(Collider collider)
+    protected override bool IsMenuHit(Collider collider)
     {
         if (!collider || !buildingSelectionMenu)
             return false;

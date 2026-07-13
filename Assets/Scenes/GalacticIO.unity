@@ -1414,7 +1414,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &186974526
 Transform:
   m_ObjectHideFlags: 0
@@ -3514,7 +3514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af5b799929b48134584ee1ef01a3816d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  buildingData: {fileID: 11400000, guid: db367de5613dcf4438fbed39306f2af8, type: 2}
+  buildingData: {fileID: -946424813869297114, guid: 789d9376fa772ee4ca42a6f031d04bcc, type: 3}
 --- !u!1001 &613213162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4811,7 +4811,7 @@ GameObject:
   - component: {fileID: 822294226}
   - component: {fileID: 822294229}
   - component: {fileID: 822294228}
-  - component: {fileID: 822294227}
+  - component: {fileID: 822294230}
   m_Layer: 0
   m_Name: socket_2
   m_TagString: Untagged
@@ -4828,25 +4828,12 @@ Transform:
   m_GameObject: {fileID: 822294225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.42261845, y: -0, z: -0, w: 0.9063077}
-  m_LocalPosition: {x: 1, y: 6.4513264, z: -4.18}
+  m_LocalPosition: {x: 0.7, y: 6.4513264, z: -4.18}
   m_LocalScale: {x: 0.085, y: 0.085, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 186974526}
   m_LocalEulerAnglesHint: {x: -0.06, y: 0, z: 0}
---- !u!114 &822294227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 822294225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af5b799929b48134584ee1ef01a3816d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  buildingData: {fileID: 11400000, guid: db367de5613dcf4438fbed39306f2af8, type: 2}
 --- !u!135 &822294228
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4866,7 +4853,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.68
+  m_Radius: 0.41
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1931382934 &822294229
 PanelRenderer:
@@ -4926,6 +4913,18 @@ PanelRenderer:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_Position: 1
+--- !u!114 &822294230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 822294225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a935a3c2e20470941836f78ac6022edf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeleteSocket
 --- !u!1001 &825399923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9375,7 +9374,7 @@ GameObject:
   - component: {fileID: 1362100216}
   - component: {fileID: 1362100219}
   - component: {fileID: 1362100218}
-  - component: {fileID: 1362100217}
+  - component: {fileID: 1362100220}
   m_Layer: 0
   m_Name: socket_1
   m_TagString: Untagged
@@ -9392,25 +9391,12 @@ Transform:
   m_GameObject: {fileID: 1362100215}
   serializedVersion: 2
   m_LocalRotation: {x: 0.42261845, y: -0, z: -0, w: 0.9063077}
-  m_LocalPosition: {x: -1, y: 6.4513264, z: -4.18}
+  m_LocalPosition: {x: -0.7, y: 6.4513264, z: -4.18}
   m_LocalScale: {x: 0.085, y: 0.085, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 186974526}
   m_LocalEulerAnglesHint: {x: -0.06, y: 0, z: 0}
---- !u!114 &1362100217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1362100215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af5b799929b48134584ee1ef01a3816d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  buildingData: {fileID: 11400000, guid: db367de5613dcf4438fbed39306f2af8, type: 2}
 --- !u!135 &1362100218
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -9430,7 +9416,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.68
+  m_Radius: 0.41
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1931382934 &1362100219
 PanelRenderer:
@@ -9490,6 +9476,18 @@ PanelRenderer:
   m_PivotReferenceSize: 0
   m_Pivot: 0
   m_Position: 1
+--- !u!114 &1362100220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1362100215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89c9146261a626d4b9c4ce4e45fa844c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditSocket
 --- !u!4 &1363095022 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7448894702055207972, guid: 092c1cb10b093d14f87c68fc41eca975, type: 3}
@@ -10886,6 +10884,7 @@ GameObject:
   - component: {fileID: 1565834743}
   - component: {fileID: 1565834744}
   - component: {fileID: 1565834745}
+  - component: {fileID: 1565834746}
   m_Layer: 0
   m_Name: TileSelectionManager
   m_TagString: Untagged
@@ -10940,6 +10939,19 @@ MonoBehaviour:
   - {fileID: 844965154}
   - {fileID: 293902153}
   - {fileID: 2137677603}
+--- !u!114 &1565834746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565834742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de0c47d8d0d75d642ab189d4c0389bf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EditSelectorMenu
+  EditSelectionMenu: {fileID: 186974525}
 --- !u!1001 &1576937298
 PrefabInstance:
   m_ObjectHideFlags: 0

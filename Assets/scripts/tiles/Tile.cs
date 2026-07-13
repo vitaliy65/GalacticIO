@@ -49,39 +49,39 @@ public class Tile : TileBehavior
             outlineMeshRenderer.materials = materials;
         }
     }
-    public override void OnTilePlaced(BuildingData buildingData)
+    public override void OnTilePlaced(Building building)
     {
-        TileBuilding = buildingData;
-
         if (TileState == TileStates.Empty)
         {
-            GameObject building = Instantiate(buildingData.BuildingPrefab, BuildAnchorPoint.transform, false);
-            building.GetComponent<Building>().IsPlacedOnResource = resourceData;
+            GameObject currentBuilding = Instantiate(building.BuildingData.BuildingPrefab, BuildAnchorPoint.transform, false);
+            currentBuilding.GetComponent<Building>().IsPlacedOnResource = resourceData;
+            TileBuilding = currentBuilding.GetComponent<Building>();
         }
 
         TileState = TileStates.Occupied;
     }
-    public override void OnTileRemoved()
+    public override bool OnTileRemoved()
     {
-        TileBuilding = null;
-
         if (BuildAnchorPoint.transform.childCount > 0)
         {
-            foreach (Transform child in BuildAnchorPoint.transform)
-            {
-                // Unregister before destroying so BuildingManager never holds on to
-                // a reference to a Building whose GameObject no longer exists.
-                Building buildingComponent = child.GetComponent<Building>();
-                if (buildingComponent != null && BuildingManager.Instance != null)
-                {
-                    BuildingManager.Instance.RemoveBuilding(buildingComponent);
-                }
+            TileBuilding = null;
+            Transform child = BuildAnchorPoint.transform.GetChild(0);
 
-                Destroy(child.gameObject);
+            // Unregister before destroying so BuildingManager never holds on to
+            // a reference to a Building whose GameObject no longer exists.
+            Building buildingComponent = child.GetComponent<Building>();
+            if (buildingComponent != null && BuildingManager.Instance != null)
+            {
+                BuildingManager.Instance.RemoveBuilding(buildingComponent);
             }
+
+            Destroy(child.gameObject);
+
+            TileState = TileStates.Empty;
+            return true;
         }
 
-        TileState = TileStates.Empty;
+        return false;
     }
 
     public void OnMouseEnter()

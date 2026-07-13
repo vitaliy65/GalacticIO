@@ -1,3 +1,4 @@
+using currency;
 using UnityEngine;
 
 namespace builds
@@ -37,9 +38,28 @@ namespace builds
             hasRegistered = true;
         }
 
-        public void Upgrade()
+        public bool TryUpgrade()
         {
-            level++;
+            if (CurrencyManager.Instance.TrySpendCoins(buildingData.BaseCost * level))
+            {
+                level++;
+                return true;
+            }
+
+            Debug.Log("Not enough coins to upgrade building.");
+            return false;
+        }
+
+        public int GetSellValue()
+        {
+            if (!buildingData)
+            {
+                return 0;
+            }
+
+            // Sell value is half of the total cost spent on this building.
+            int totalCost = buildingData.BaseCost * level;
+            return totalCost / 2;
         }
 
         public float GetModifier()
