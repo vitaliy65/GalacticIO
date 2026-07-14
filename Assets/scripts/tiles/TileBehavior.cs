@@ -36,6 +36,9 @@ namespace tiles
         protected GameObject OutlinedPart;
         [SerializeField]
         protected GameObject BuildAnchorPoint;
+        [Tooltip("The tile's own surface/ground mesh renderer - assign the child that shows the tile's material (not the outline, not the building anchor). Used by WorldGenerator to apply a biome's material.")]
+        [SerializeField]
+        protected MeshRenderer MaterialRenderer;
 
         public bool isSelected { get; set; }
         public bool isHovered { get; set; }
@@ -48,6 +51,30 @@ namespace tiles
         {
             Height = height;
             Heat = heat;
+            if (!TileData.Type.Equals(TileTypes.Water))
+                transform.position = new Vector3(transform.position.x, Height, transform.position.z);
+        }
+
+        /// <summary>
+        /// One-call setup for a tile spawned by WorldGenerator: assigns its
+        /// gameplay data, its resource (if any), applies the biome's material to
+        /// groundRenderer, and stores the height/heat that produced this result.
+        /// </summary>
+        public void InitializeFromWorldGenerator(
+            TileScriptable generatedTileData,
+            ResourceData generatedResourceData,
+            Material biomeMaterial,
+            float height,
+            float heat)
+        {
+            tileData = generatedTileData;
+            tileResourceData = generatedResourceData;
+            SetGeneratedMapData(height, heat);
+
+            if (MaterialRenderer && biomeMaterial)
+            {
+                MaterialRenderer.material = biomeMaterial;
+            }
         }
 
         // Expose read-only accessors so other systems can decide UI/logic without

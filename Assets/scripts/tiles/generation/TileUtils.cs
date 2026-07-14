@@ -101,5 +101,26 @@ namespace tiles
             }
             return null;
         }
+
+        /// <summary>
+        /// The base gameplay type for a biome's ordinary (non-ore-cluster) tiles.
+        /// Most biomes are just visually distinct "Ground" - Ocean is Water and
+        /// Forest is Forest, since those affect gameplay (e.g. walkability),
+        /// while Desert/Grassland/Mountain/Tundra don't have a dedicated
+        /// TileTypes yet, so they fall back to Ground. Extend this switch if you
+        /// add more TileTypes later.
+        /// </summary>
+        public static TileTypes GetTileTypeFromBiome(TileBiomes biome)
+        {
+            switch (biome)
+            {
+                case TileBiomes.Ocean:
+                    return TileTypes.Water;
+                case TileBiomes.Forest:
+                    return TileTypes.Forest;
+                default:
+                    return TileTypes.Ground;
+            }
+        }
     }
 }

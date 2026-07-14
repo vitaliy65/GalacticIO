@@ -31,6 +31,8 @@ namespace tiles
         /// random value per playthrough) to get a different map from the same
         /// settings; keep it fixed to regenerate the same map deterministically.</param>
         /// <returns>A value normalized to roughly [0, 1].</returns>
+        /// <param name="minRange">Минимальное желаемое значение на выходе.</param>
+        /// <param name="maxRange">Максимальное желаемое значение на выходе.</param>
         public static float FractalNoise(
             float x,
             float y,
@@ -38,7 +40,9 @@ namespace tiles
             float persistence,
             float lacunarity,
             float scale,
-            Vector2 offset)
+            Vector2 offset,
+            float minRange = 0f,   // Добавлен параметр минимума (по умолчанию 0)
+            float maxRange = 1f)   // Добавлен параметр максимума (по умолчанию 1)
         {
             scale = Mathf.Max(scale, 0.0001f);
 
@@ -52,9 +56,7 @@ namespace tiles
                 float sampleX = (x + offset.x) / scale * frequency;
                 float sampleY = (y + offset.y) / scale * frequency;
 
-                // Mathf.PerlinNoise returns roughly [0, 1]; remap to [-1, 1] so
-                // octaves can partially cancel each other like real fBm noise
-                // instead of only ever stacking upward.
+                // Mathf.PerlinNoise возвращает примерно [0, 1]; переводим в [-1, 1]
                 float sample = Mathf.PerlinNoise(sampleX, sampleY) * 2f - 1f;
 
                 noiseSum += sample * amplitude;
@@ -66,11 +68,15 @@ namespace tiles
 
             if (amplitudeSum <= 0f)
             {
-                return 0.5f;
+                // Если сумма амплитуд равна нулю, возвращаем середину заданного диапазона
+                return Mathf.Lerp(minRange, maxRange, 0f);
             }
 
-            // noiseSum is in [-amplitudeSum, amplitudeSum]; bring it back to [0, 1].
-            return Mathf.InverseLerp(-amplitudeSum, amplitudeSum, noiseSum);
+            // 1. Приводим noiseSum из [-amplitudeSum, amplitudeSum] к нормализованному [0, 1]
+            float normalized01 = Mathf.InverseLerp(-amplitudeSum, amplitudeSum, noiseSum);
+
+            // 2. Растягиваем нормализованное значение на нужный пользователю диапазон
+            return Mathf.Lerp(minRange, maxRange, normalized01);
         }
     }
 }

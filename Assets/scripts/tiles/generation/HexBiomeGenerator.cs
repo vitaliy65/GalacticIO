@@ -3,117 +3,161 @@ using UnityEngine;
 namespace tiles
 {
     /// <summary>
-    /// Computes a height value and a heat value for every hex tile already placed
-    /// in the scene (via TileBehavior.AllTiles) and stores them on each tile.
+    /// Computes height (elevation) and heat (temperature) for hex tiles.
     ///
-    /// IMPORTANT - why this samples noise using transform.position and not a
+    /// Two ways to use it:
+    /// - Generate() - post-processes tiles that already exist in the scene
+    ///   (via TileBehavior.AllTiles), e.g. hand-painted ones.
+    /// - SampleHeight()/SampleHeat() - compute a value for an arbitrary world
+    ///   position, for code that needs the answer BEFORE a tile exists there
+    ///   (e.g. WorldGenerator, deciding what to spawn at each grid cell).
+    ///
+    /// IMPORTANT - why this samples noise using world position and not a
     /// row/column index:
     /// Unity's hex Grid already spaces tiles correctly for a hex layout (every
     /// other row is offset horizontally so hexagons tile without gaps). If you
     /// instead fed raw row/column indices into the noise function, every row
     /// would be treated as if it weren't offset, which shows up as a visible
     /// diagonal "stretching"/shearing in the generated pattern. Sampling at the
-    /// tile's actual world position sidesteps this completely, since Unity has
-    /// already solved the spacing problem for you when it placed the tiles.
+    /// real world position sidesteps this completely, since Unity has already
+    /// solved the spacing problem for you.
     ///
     /// This project's grid lies on the XY plane (confirmed from the scene: hex
     /// neighbor offsets like (2.56, 1.48, 0) - Z is constant). If you ever move
-    /// to an XZ-plane (3D, Y-up) layout instead, swap pos.y below for
-    /// tile.transform.position.z.
+    /// to an XZ-plane (3D, Y-up) layout instead, swap Y for Z below.
     /// </summary>
     public class HexBiomeGenerator : MonoBehaviour
     {
         [Header("Height noise (elevation)")]
-        [SerializeField] private int heightOctaves = 4;
-        [SerializeField] private float heightPersistence = 0.5f;
-        [SerializeField] private float heightLacunarity = 2f;
-        [SerializeField] private float heightScale = 10f;
-        [SerializeField] private Vector2 heightOffset;
+        [Tooltip("How many noise layers are stacked together. More layers add finer detail on top of the big shapes, at a higher cost per tile. 3-5 is typical.")]
+        [SerializeField] private int heightDetailLayerCount = 4;
+        [Tooltip("How much each extra detail layer contributes compared to the layer before it (0-1). Higher = rougher, more detailed terrain.")]
+        [SerializeField] private float heightDetailStrength = 0.5f;
+        [Tooltip("How much smaller/denser each extra detail layer is compared to the layer before it. Higher = finer, busier detail.")]
+        [SerializeField] private float heightDetailZoomMultiplier = 2f;
+        [Tooltip("Size of the large-scale height features, in world units. Bigger = broader, smoother continents/hills; smaller = busier, noisier terrain.")]
+        [SerializeField] private float heightFeatureSize = 10f;
+        [Tooltip("Shifts which part of the noise pattern gets sampled. Change this to get a different-looking map from the same settings; keep it fixed to regenerate the same map.")]
+        [SerializeField] private Vector2 heightNoiseOrigin;
 
         [Header("Heat noise (local variation on top of latitude)")]
-        [SerializeField] private int heatOctaves = 3;
-        [SerializeField] private float heatPersistence = 0.5f;
-        [SerializeField] private float heatLacunarity = 2f;
-        [SerializeField] private float heatScale = 14f;
-        [SerializeField] private Vector2 heatOffset = new Vector2(1000f, 1000f);
+        [SerializeField] private int heatDetailLayerCount = 3;
+        [SerializeField] private float heatDetailStrength = 0.5f;
+        [SerializeField] private float heatDetailZoomMultiplier = 2f;
+        [SerializeField] private float heatFeatureSize = 14f;
+        [SerializeField] private Vector2 heatNoiseOrigin = new Vector2(1000f, 1000f);
 
         [Header("Climate shaping")]
-        [Tooltip("How much elevation cools a tile down. 0 = elevation has no effect on heat.")]
-        [SerializeField] private float heightCoolingStrength = 0.35f;
-        [Tooltip("How much weight latitude has vs. local noise when computing heat (0-1).")]
-        [SerializeField, Range(0f, 1f)] private float latitudeWeight = 0.7f;
-        [Tooltip("World-space Y of the map's 'equator' - the warmest row.")]
-        [SerializeField] private float equatorY = 0f;
-        [Tooltip("Distance in world units from the equator to the coldest edge of the map.")]
-        [SerializeField] private float halfMapSpanY = 30f;
+        [Tooltip("How much elevation cools a tile down. 0 = elevation has no effect on heat; higher = mountains are noticeably colder.")]
+        [SerializeField] private float elevationCoolingEffect = 0.35f;
+        [Tooltip("How much weight latitude has vs. local noise when computing heat. 0 = pure noise (no climate bands), 1 = pure latitude (perfectly straight bands).")]
+        [SerializeField, Range(0f, 1f)] private float latitudeInfluence = 0.7f;
+        [SerializeField, Range(-5f, 1f)] private float seaLevel = 0f;
+        [SerializeField, Range(1f, 5f)] private float mountainLevel = 3f;
 
-        [ContextMenu("Generate Height & Heat")]
+        public float SeaLevel => seaLevel;
+        public float MountainLevel => mountainLevel;
+
+        public static HexBiomeGenerator Instance { get; private set; }
+
+        private void Awake()
+        {
+            if (Instance && Instance != this)
+            {
+                Destroy(this);
+                return;
+            }
+
+            Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
+
+        [ContextMenu("Generate Height & Heat For Existing Tiles")]
         public void Generate()
         {
             foreach (var tile in TileBehavior.AllTiles)
             {
-                Vector2 pos = new Vector2(tile.transform.position.x, tile.transform.position.y);
+                Vector3 worldPosition = tile.transform.position;
 
-                float height = NoiseUtils.FractalNoise(
-                    pos.x, pos.y,
-                    heightOctaves, heightPersistence, heightLacunarity, heightScale,
-                    heightOffset);
+                float Height = SampleHeight(worldPosition);
+                float heat = SampleHeat(worldPosition, Height);
 
-                float heat = ComputeHeat(pos, height);
-
-                tile.SetGeneratedMapData(height, heat);
+                tile.SetGeneratedMapData(Height, heat);
             }
         }
 
-        private float ComputeHeat(Vector2 pos, float height)
+        /// <summary>
+        /// Elevation at a given world position, roughly in [0, 1]. Exposed (not
+        /// private) so code like WorldGenerator can sample it for a grid cell
+        /// before any tile exists there yet.
+        /// </summary>
+        public float SampleHeight(Vector3 worldPosition)
         {
-            // Latitude band: 1 at the equator, fading toward 0 at the map's edges.
-            // This is what produces large-scale climate bands instead of heat
-            // being just noise with no overall structure.
-            float distanceFromEquator = Mathf.Abs(pos.y - equatorY);
-            float latitude = 1f - Mathf.Clamp01(distanceFromEquator / Mathf.Max(halfMapSpanY, 0.0001f));
+            return NoiseUtils.FractalNoise(
+                worldPosition.x, worldPosition.z,
+                heightDetailLayerCount, heightDetailStrength, heightDetailZoomMultiplier, heightFeatureSize,
+                heightNoiseOrigin, seaLevel, mountainLevel);
 
-            // A second, independent noise map for local variation - without this,
-            // every tile at the same latitude would have identical heat and the
-            // climate bands would look like perfectly straight stripes.
+        }
+
+        /// <summary>
+        /// Heat/temperature at a given world position, roughly in [0, 1]. Needs
+        /// the height at that position too, since higher elevation cools a tile
+        /// down (see elevationCoolingEffect).
+        /// </summary>
+        public float SampleHeat(Vector3 worldPosition, float height)
+        {
+            // ИСПРАВЛЕНО: Заменено worldPosition.z на worldPosition.y для XY-плоскости
             float heatNoise = NoiseUtils.FractalNoise(
-                pos.x, pos.y,
-                heatOctaves, heatPersistence, heatLacunarity, heatScale,
-                heatOffset);
+                worldPosition.x, worldPosition.y,
+                heatDetailLayerCount, heatDetailStrength, heatDetailZoomMultiplier, heatFeatureSize,
+                heatNoiseOrigin);
 
-            float heat = Mathf.Clamp01(latitude * latitudeWeight + heatNoise * (1f - latitudeWeight));
+            float heat = Mathf.Clamp01(latitudeInfluence + heatNoise * (1f - latitudeInfluence));
 
-            // Higher elevation = colder, same as real mountains, even near the equator.
-            heat -= height * heightCoolingStrength;
+            // Чем выше тайл (ближе к горным вершинам), тем сильнее падает температура
+            heat -= height * elevationCoolingEffect;
 
             return Mathf.Clamp01(heat);
         }
 
         /// <summary>
-        /// Example Whittaker-style height/heat -> biome lookup (see the redblobgames
-        /// article above). These thresholds are placeholders - tune them for your
-        /// game. TileTypes currently only has Ground/Forest/Water/Ore/Build, so this
-        /// is a starting point; add more TileScriptable assets (desert, tundra, etc.)
-        /// and extend this method as you flesh biomes out further.
+        /// Классическая схема Уиттекера (Whittaker). 
+        /// Теперь принимает И высоту, И теплоту для точного определения биома.
         /// </summary>
-        public static TileTypes PickBiome(float height, float heat)
+        public static TileBiomes PickBiome(float height, float heat)
         {
-            if (height < 0.35f)
+            // 1. Сначала проверяем жесткие физические границы высоты
+            if (height <= 0)
             {
-                return TileTypes.Water;
+                return TileBiomes.Ocean;
+            }
+            if (height >= 1)
+            {
+                return TileBiomes.Mountain;
             }
 
-            if (height > 0.8f)
+            // 2. Для промежуточных высот (суши) распределяем биомы строго по температуре:
+            // от самого холодного к самому горячему
+            if (heat <= 0.5f)
             {
-                return TileTypes.Ore; // e.g. mountains are where ore veins surface
+                return TileBiomes.Tundra; // Холодно
+            }
+            if (heat > 0.5f && heat <= 0.65f)
+            {
+                return TileBiomes.Forest; // Прохладно
+            }
+            if (heat > 0.65f && heat <= 0.8f)
+            {
+                return TileBiomes.Grassland; // Умеренно
             }
 
-            if (heat > 0.55f)
-            {
-                return TileTypes.Forest;
-            }
-
-            return TileTypes.Ground;
+            return TileBiomes.Desert; // Жарко
         }
     }
 }
