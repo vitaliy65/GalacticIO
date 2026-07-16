@@ -47,6 +47,10 @@ namespace tiles
         public float Height;
         [SerializeField]
         public float Heat;
+        [SerializeField]
+        public TileBiomes Biome;
+        [SerializeField]
+        public TileSubBiomes SubBiome;
 
         private static readonly int BaseColorPropertyId = Shader.PropertyToID("_TileColor");
         private MaterialPropertyBlock materialPropertyBlock;
@@ -74,14 +78,16 @@ namespace tiles
         public abstract void OnTilePlaced(Building building);
         public abstract bool OnTileRemoved();
 
-        public void SetGeneratedMapData(float height, float heat, TileBiomes tileBiome)
+        public void SetGeneratedMapData(float height, float heat, TileBiomes tileBiome, TileSubBiomes subBiome)
         {
             Height = height;
             Heat = heat;
+            Biome = tileBiome;
+            SubBiome = subBiome;
 
-            switch (tileBiome)
+            switch (SubBiome)
             {
-                case TileBiomes.Mountain:
+                case TileSubBiomes.Hills:
                     transform.position = new Vector3(transform.position.x, Height + 0.25f, transform.position.z);
                     break;
                 default:
@@ -110,11 +116,12 @@ namespace tiles
             ResourceData generatedResourceData,
             float height,
             float heat,
-            TileBiomes tileBiome)
+            TileBiomes tileBiome,
+            TileSubBiomes subBiome)
         {
             tileData = generatedTileData;
             tileResourceData = generatedResourceData;
-            SetGeneratedMapData(height, heat, tileBiome);
+            SetGeneratedMapData(height, heat, tileBiome, subBiome);
         }
 
         public void AddEnvironment(GameObject obj)

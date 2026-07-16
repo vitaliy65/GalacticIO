@@ -44,28 +44,6 @@ namespace tiles
         }
 
 
-
-        public static TileResources GetResourceFromBiome(TileBiomes biome)
-        {
-            switch (biome)
-            {
-                case TileBiomes.Desert:
-                    return TileResources.Iron;
-                case TileBiomes.Forest:
-                    return TileResources.Copper;
-                case TileBiomes.Plains:
-                    return TileResources.Gold;
-                case TileBiomes.Mountain:
-                    return TileResources.Silver;
-                case TileBiomes.Ocean:
-                    return TileResources.None;
-                case TileBiomes.Tundra:
-                    return TileResources.Diamond;
-                default:
-                    return TileResources.None;
-            }
-        }
-
         public static ResourceData GetResourceDataFromBiome(TileBiomes biome)
         {
             foreach (var mapping in Instance.biomeResourceDataMapping)
@@ -77,21 +55,6 @@ namespace tiles
             }
             return null;
         }
-
-
-
-        // public static Material GetTileMaterialFromBiome(TileBiomes biome)
-        // {
-        //     foreach (var mapping in Instance.biomeMaterialMapping)
-        //     {
-        //         if (mapping.Key == biome)
-        //         {
-        //             return mapping.Value;
-        //         }
-        //     }
-        //     return null;
-        // }
-
 
         public static TileScriptable GetTileDataFromType(TileTypes tileType)
         {
@@ -105,15 +68,7 @@ namespace tiles
             return null;
         }
 
-        /// <summary>
-        /// Looks up a color for a given heat value (0-1) from heatColorGradient -
-        /// a thin horizontal gradient texture where X position = heat and the
-        /// pixel color at that X is the color to show. GetPixelBilinear smoothly
-        /// blends between neighboring pixels, and Y is fixed at the middle row so
-        /// the texture can be any height (even 1px tall works).
-        /// Returns white (no tint) if TileUtils or the texture isn't set up yet,
-        /// so a missing reference doesn't throw and break tile initialization.
-        /// </summary>
+
         public static Color GetColor(float height, TileBiomes biome)
         {
             // Ограничиваем на всякий случай в диапазоне [0, 1]

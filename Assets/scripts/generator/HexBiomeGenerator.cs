@@ -61,6 +61,19 @@ namespace tiles
         [SerializeField, Range(-5f, 1f)] private float seaLevel = 0f;
         [SerializeField, Range(1f, 5f)] private float mountainLevel = 3f;
 
+        [Header("Sub-biome shaping (within a land biome)")]
+        [Tooltip("Height above which a land tile becomes the Hills sub-biome instead of flat Plains/Forest, regardless of which climate (Plains/Desert/Tundra) it's in. Kept below the top-level Mountain cutoff, so Hills is the common 'elevated' case and Mountain stays a rarer, more extreme peak.")]
+        [SerializeField, Range(0f, 1f)] private float hillsHeightThreshold = 0.55f;
+        [Tooltip("Moisture above which a Plains ('Grassland') tile becomes the Forest sub-biome instead of flat Plains.")]
+        [SerializeField, Range(0f, 1f)] private float forestMoistureThreshold = 0.6f;
+
+        [Header("Oasis (rare Desert sub-biome)")]
+        [Tooltip("Size of oasis patches, in world units - kept small so they're rare, isolated spots rather than following the desert's overall shape.")]
+        [SerializeField] private float oasisFeatureSize = 5f;
+        [Tooltip("How high the oasis noise has to be for a tile to count as an oasis, 0-1. Higher = rarer.")]
+        [SerializeField, Range(0f, 1f)] private float oasisThreshold = 0.85f;
+        [SerializeField] private Vector2 oasisNoiseOrigin = new Vector2(8000f, -3000f);
+
         public float SeaLevel => seaLevel;
         public float MountainLevel => mountainLevel;
 
@@ -95,16 +108,12 @@ namespace tiles
                 float heat = SampleHeat(worldPosition);
                 float moisture = SampleMoisture(worldPosition);
                 TileBiomes biome = PickBiome(Height, heat, moisture);
+                TileSubBiomes subBiome = PickSubBiome(biome, Height, moisture, worldPosition);
 
-                tile.SetGeneratedMapData(Height, heat, biome);
+                tile.SetGeneratedMapData(Height, heat, biome, subBiome);
             }
         }
 
-        /// <summary>
-        /// Elevation at a given world position, roughly in [0, 1]. Exposed (not
-        /// private) so code like WorldGenerator can sample it for a grid cell
-        /// before any tile exists there yet.
-        /// </summary>
         public float SampleHeight(Vector3 worldPosition)
         {
             return NoiseUtils.FractalNoise(
@@ -114,14 +123,6 @@ namespace tiles
 
         }
 
-        /// <summary>
-        /// Heat/temperature at a given world position, roughly in [0, 1].
-        /// Deliberately does NOT take height as input - biome climate should
-        /// come purely from heat + moisture (see PickBiome), so a mountain and
-        /// a lowland at the same position on the heat/moisture noise maps get
-        /// the same climate. Height still separately decides Ocean/Mountain in
-        /// PickBiome, just never blends into heat itself.
-        /// </summary>
         public float SampleHeat(Vector3 worldPosition)
         {
             float heatNoise = NoiseUtils.FractalNoise(
@@ -132,14 +133,7 @@ namespace tiles
             return Mathf.Clamp01(latitudeInfluence + heatNoise * (1f - latitudeInfluence));
         }
 
-        /// <summary>
-        /// Moisture at a given world position, roughly in [0, 1]. Same
-        /// technique as heat (fractal noise), but a completely separate noise
-        /// map - a different origin/seed means it varies independently of
-        /// heat, which is what makes a proper 2-axis (heat x moisture)
-        /// biome grid possible instead of everything being driven by one
-        /// number. Also height-independent, same reasoning as SampleHeat.
-        /// </summary>
+
         public float SampleMoisture(Vector3 worldPosition)
         {
             return NoiseUtils.FractalNoise(
@@ -148,13 +142,7 @@ namespace tiles
                 moistureNoiseOrigin);
         }
 
-        /// <summary>
-        /// Height decides ONLY whether a tile is Ocean or Mountain - those are
-        /// inherently elevation concepts, so this is the one place height is
-        /// still allowed to matter. Every other biome (the "land climate") is
-        /// picked purely from heat + moisture via PickLandBiome, with no height
-        /// term anywhere in that path.
-        /// </summary>
+
         public static TileBiomes PickBiome(float height, float heat, float moisture)
         {
             if (height <= 0)
@@ -162,35 +150,69 @@ namespace tiles
                 return TileBiomes.Ocean;
             }
 
-            if (height >= 0.8)
-            {
-                return TileBiomes.Mountain;
-            }
-
-            return PickLandBiome(heat, moisture);
-        }
-
-        /// <summary>
-        /// Classic Whittaker-style 2-axis grid: heat (temperature) on one axis,
-        /// moisture (precipitation) on the other. No height/elevation term at
-        /// all - a lowland and a hill with identical heat+moisture always get
-        /// the same land biome. Thresholds are placeholders - tune them for
-        /// your game.
-        /// </summary>
-        public static TileBiomes PickLandBiome(float heat, float moisture)
-        {
             if (heat <= 0.5f)
             {
-                return TileBiomes.Tundra; // Cold, moisture doesn't matter much here
+                return TileBiomes.Tundra; // Cold
             }
 
             if (heat <= 0.65f)
             {
-                return moisture >= 0.5f ? TileBiomes.Forest : TileBiomes.Plains;
+                return TileBiomes.Grassland; // Temperate - "Grassland" climate
             }
 
-            // Hot: dry -> desert, wet -> forest (matches how real hot climates split)
-            return moisture >= 0.5f ? TileBiomes.Forest : TileBiomes.Desert;
+            // Hot: dry -> desert, wet -> still Plains climate (Forest sub-biome
+            // picks it up via moisture, see PickSubBiome)
+            return moisture >= 0.5f ? TileBiomes.Grassland : TileBiomes.Desert;
+        }
+
+        public TileSubBiomes PickSubBiome(TileBiomes biome, float height, float moisture, Vector3 worldPosition)
+        {
+            switch (biome)
+            {
+                case TileBiomes.Grassland:
+                    if (height >= hillsHeightThreshold)
+                    {
+                        return TileSubBiomes.Hills;
+                    }
+                    if (moisture >= forestMoistureThreshold)
+                    {
+                        return TileSubBiomes.Forest;
+                    }
+                    return TileSubBiomes.Plains;
+
+                case TileBiomes.Desert:
+                    if (IsOasis(worldPosition))
+                    {
+                        return TileSubBiomes.Oasis;
+                    }
+                    if (height >= hillsHeightThreshold)
+                    {
+                        return TileSubBiomes.Hills;
+                    }
+                    return TileSubBiomes.Plains;
+
+                case TileBiomes.Tundra:
+                    if (height >= hillsHeightThreshold)
+                    {
+                        return TileSubBiomes.Hills;
+                    }
+                    return TileSubBiomes.Plains;
+
+                default:
+                    // Ocean, Mountain - no finer subdivision.
+                    return TileSubBiomes.None;
+            }
+        }
+
+
+        private bool IsOasis(Vector3 worldPosition)
+        {
+            float noise = NoiseUtils.FractalNoise(
+                worldPosition.x, worldPosition.z,
+                octaves: 2, persistence: 0.5f, lacunarity: 2f,
+                scale: oasisFeatureSize, offset: oasisNoiseOrigin);
+
+            return noise > oasisThreshold;
         }
     }
 }

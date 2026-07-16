@@ -25,18 +25,19 @@ public class EmbientGenerator : Generator
             Instance = null;
     }
 
-    public GameObject GenerateEnvironment(TileBiomes biome, bool isOre)
+    public GameObject GenerateEnvironment(TileBiomes biome, TileSubBiomes subBiome, bool isOre)
     {
         switch (biome)
         {
             case TileBiomes.Desert:
                 break;
-            case TileBiomes.Forest:
-                return CalculateSpawn(isOre, ForestEnvironmentList);
-            case TileBiomes.Plains:
-                break;
-            case TileBiomes.Mountain:
-                break;
+            case TileBiomes.Grassland:
+                switch (subBiome)
+                {
+                    case TileSubBiomes.Hills: return null;
+                    case TileSubBiomes.Plains: return null;
+                    default: return CalculateSpawn(isOre, ForestEnvironmentList);
+                }
             case TileBiomes.Ocean:
                 break;
             case TileBiomes.Tundra:

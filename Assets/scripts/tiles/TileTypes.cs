@@ -3,11 +3,18 @@ namespace tiles
     public enum TileBiomes
     {
         Desert,
-        Forest,
-        Plains,
-        Mountain,
+        Grassland,
         Ocean,
         Tundra,
+    }
+
+    public enum TileSubBiomes
+    {
+        None,
+        Plains,
+        Hills,
+        Forest,
+        Oasis,
     }
 
     public enum TileTypes

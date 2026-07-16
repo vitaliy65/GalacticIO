@@ -100,6 +100,8 @@ namespace tiles
                 return;
             }
 
+            TileSubBiomes subBiome = biomeGenerator.PickSubBiome(biome, Height, moisture, worldPosition);
+
             // Ore doesn't make sense under Ocean tiles - everything else is
             // eligible for a small chance of an ore cluster.
             bool isOreCluster = biome != TileBiomes.Ocean && IsOreCluster(worldPosition);
@@ -115,12 +117,12 @@ namespace tiles
             }
 
             GameObject spawnedTile = Instantiate(tilePrefab, worldPosition, Quaternion.identity, tilesParent);
-            spawnedTile.name = $"Tile_{col}_{row}_{biome}";
+            spawnedTile.name = $"Tile_{col}_{row}_{biome}_{subBiome}";
 
 
             Tile tile = spawnedTile.GetComponent<Tile>();
-            tile.InitializeFromWorldGenerator(tileData, resourceData, Height, heat, biome);
-            tile.AddEnvironment(EmbientGenerator.Instance.GenerateEnvironment(biome, isOreCluster));
+            tile.InitializeFromWorldGenerator(tileData, resourceData, Height, heat, biome, subBiome);
+            tile.AddEnvironment(EmbientGenerator.Instance.GenerateEnvironment(biome, subBiome, isOreCluster));
         }
 
         private bool IsOreCluster(Vector3 worldPosition)
