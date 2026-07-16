@@ -89,7 +89,7 @@ namespace tiles
                     break;
             }
 
-            ApplyHeatColor(TileUtils.GetColor(height, heat));
+            ApplyHeatColor(TileUtils.GetColor(height, tileBiome));
         }
 
         public void ApplyHeatColor(Color color)

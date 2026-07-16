@@ -21,12 +21,8 @@ namespace tiles
         [SerializeField]
         private List<SerializablePair<TileBiomes, ResourceData>> biomeResourceDataMapping = new List<SerializablePair<TileBiomes, ResourceData>>();
 
-        // [SerializeField]
-        // private List<SerializablePair<TileBiomes, Material>> biomeMaterialMapping = new List<SerializablePair<TileBiomes, Material>>();
-
-        [Tooltip("A thin horizontal gradient texture: X position (0-1) = heat, pixel color at that X = the color to tint a tile with that heat. Must have 'Read/Write Enabled' checked in its Texture Import Settings.")]
         [SerializeField]
-        private Texture2D heatColorGradient;
+        private HeatmapList heatmapList;
 
         public static TileUtils Instance { get; private set; }
 
@@ -118,31 +114,20 @@ namespace tiles
         /// Returns white (no tint) if TileUtils or the texture isn't set up yet,
         /// so a missing reference doesn't throw and break tile initialization.
         /// </summary>
-        public static Color GetColor(float height, float heat)
+        public static Color GetColor(float height, TileBiomes biome)
         {
-            if (!Instance || !Instance.heatColorGradient)
-            {
-                return Color.white;
-            }
-
-            float adjustedHeat = heat;
-
-            if (height > heat)
-            {
-                // Коэффициент интенсивности охлаждения. 
-                // Можно вынести в настройки: чем он больше, тем сильнее высота глушит тепло.
-                float coolingIntensity = 2.0f;
-
-                float difference = height - heat;
-
-                // Экспоненциальное уменьшение теплоты
-                adjustedHeat = heat * Mathf.Exp(-coolingIntensity * difference);
-            }
-
             // Ограничиваем на всякий случай в диапазоне [0, 1]
-            float pixelCoordinate = Mathf.Clamp01(adjustedHeat);
+            float pixelCoordinate = Mathf.Clamp01(height);
 
-            return Instance.heatColorGradient.GetPixelBilinear(pixelCoordinate, pixelCoordinate);
+            Texture2D heatColorGradient = null;
+
+            foreach (var option in Instance.heatmapList.HeatmapMaping)
+            {
+                if (option.Key == biome)
+                    heatColorGradient = option.Value;
+            }
+
+            return heatColorGradient.GetPixelBilinear(pixelCoordinate, pixelCoordinate);
         }
     }
 }

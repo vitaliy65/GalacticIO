@@ -47,9 +47,15 @@ namespace tiles
         [SerializeField] private float heatFeatureSize = 14f;
         [SerializeField] private Vector2 heatNoiseOrigin = new Vector2(1000f, 1000f);
 
+        [Header("Moisture noise (second, independent climate axis)")]
+        [Tooltip("Same idea as heat, but a completely separate noise map (different origin) - combined with heat, this is what actually decides the land biome. Kept independent from height on purpose.")]
+        [SerializeField] private int moistureDetailLayerCount = 3;
+        [SerializeField] private float moistureDetailStrength = 0.5f;
+        [SerializeField] private float moistureDetailZoomMultiplier = 2f;
+        [SerializeField] private float moistureFeatureSize = 14f;
+        [SerializeField] private Vector2 moistureNoiseOrigin = new Vector2(-4000f, 2500f);
+
         [Header("Climate shaping")]
-        [Tooltip("How much elevation cools a tile down. 0 = elevation has no effect on heat; higher = mountains are noticeably colder.")]
-        [SerializeField] private float elevationCoolingEffect = 0.35f;
         [Tooltip("How much weight latitude has vs. local noise when computing heat. 0 = pure noise (no climate bands), 1 = pure latitude (perfectly straight bands).")]
         [SerializeField, Range(0f, 1f)] private float latitudeInfluence = 0.7f;
         [SerializeField, Range(-5f, 1f)] private float seaLevel = 0f;
@@ -86,8 +92,9 @@ namespace tiles
                 Vector3 worldPosition = tile.transform.position;
 
                 float Height = SampleHeight(worldPosition);
-                float heat = SampleHeat(worldPosition, Height);
-                TileBiomes biome = PickBiome(Height, heat);
+                float heat = SampleHeat(worldPosition);
+                float moisture = SampleMoisture(worldPosition);
+                TileBiomes biome = PickBiome(Height, heat, moisture);
 
                 tile.SetGeneratedMapData(Height, heat, biome);
             }
@@ -108,58 +115,82 @@ namespace tiles
         }
 
         /// <summary>
-        /// Heat/temperature at a given world position, roughly in [0, 1]. Needs
-        /// the height at that position too, since higher elevation cools a tile
-        /// down (see elevationCoolingEffect).
+        /// Heat/temperature at a given world position, roughly in [0, 1].
+        /// Deliberately does NOT take height as input - biome climate should
+        /// come purely from heat + moisture (see PickBiome), so a mountain and
+        /// a lowland at the same position on the heat/moisture noise maps get
+        /// the same climate. Height still separately decides Ocean/Mountain in
+        /// PickBiome, just never blends into heat itself.
         /// </summary>
-        public float SampleHeat(Vector3 worldPosition, float height)
+        public float SampleHeat(Vector3 worldPosition)
         {
-            // ИСПРАВЛЕНО: Заменено worldPosition.z на worldPosition.y для XY-плоскости
             float heatNoise = NoiseUtils.FractalNoise(
                 worldPosition.x, worldPosition.z,
                 heatDetailLayerCount, heatDetailStrength, heatDetailZoomMultiplier, heatFeatureSize,
                 heatNoiseOrigin);
 
-            float heat = Mathf.Clamp01(latitudeInfluence + heatNoise * (1f - latitudeInfluence));
-
-            // Чем выше тайл (ближе к горным вершинам), тем сильнее падает температура
-            heat -= height * elevationCoolingEffect;
-
-            return Mathf.Clamp01(heat);
+            return Mathf.Clamp01(latitudeInfluence + heatNoise * (1f - latitudeInfluence));
         }
 
         /// <summary>
-        /// Классическая схема Уиттекера (Whittaker). 
-        /// Теперь принимает И высоту, И теплоту для точного определения биома.
+        /// Moisture at a given world position, roughly in [0, 1]. Same
+        /// technique as heat (fractal noise), but a completely separate noise
+        /// map - a different origin/seed means it varies independently of
+        /// heat, which is what makes a proper 2-axis (heat x moisture)
+        /// biome grid possible instead of everything being driven by one
+        /// number. Also height-independent, same reasoning as SampleHeat.
         /// </summary>
-        public static TileBiomes PickBiome(float height, float heat)
+        public float SampleMoisture(Vector3 worldPosition)
         {
-            // 1. Сначала проверяем жесткие физические границы высоты
+            return NoiseUtils.FractalNoise(
+                worldPosition.x, worldPosition.z,
+                moistureDetailLayerCount, moistureDetailStrength, moistureDetailZoomMultiplier, moistureFeatureSize,
+                moistureNoiseOrigin);
+        }
+
+        /// <summary>
+        /// Height decides ONLY whether a tile is Ocean or Mountain - those are
+        /// inherently elevation concepts, so this is the one place height is
+        /// still allowed to matter. Every other biome (the "land climate") is
+        /// picked purely from heat + moisture via PickLandBiome, with no height
+        /// term anywhere in that path.
+        /// </summary>
+        public static TileBiomes PickBiome(float height, float heat, float moisture)
+        {
             if (height <= 0)
             {
                 return TileBiomes.Ocean;
             }
-            if (height >= 1)
+
+            if (height >= 0.8)
             {
                 return TileBiomes.Mountain;
             }
 
-            // 2. Для промежуточных высот (суши) распределяем биомы строго по температуре:
-            // от самого холодного к самому горячему
+            return PickLandBiome(heat, moisture);
+        }
+
+        /// <summary>
+        /// Classic Whittaker-style 2-axis grid: heat (temperature) on one axis,
+        /// moisture (precipitation) on the other. No height/elevation term at
+        /// all - a lowland and a hill with identical heat+moisture always get
+        /// the same land biome. Thresholds are placeholders - tune them for
+        /// your game.
+        /// </summary>
+        public static TileBiomes PickLandBiome(float heat, float moisture)
+        {
             if (heat <= 0.5f)
             {
-                return TileBiomes.Tundra; // Холодно
-            }
-            if (heat > 0.5f && heat <= 0.65f)
-            {
-                return TileBiomes.Forest; // Прохладно
-            }
-            if (heat > 0.65f && heat <= 0.8f)
-            {
-                return TileBiomes.Plains; // Умеренно
+                return TileBiomes.Tundra; // Cold, moisture doesn't matter much here
             }
 
-            return TileBiomes.Desert; // Жарко
+            if (heat <= 0.65f)
+            {
+                return moisture >= 0.5f ? TileBiomes.Forest : TileBiomes.Plains;
+            }
+
+            // Hot: dry -> desert, wet -> forest (matches how real hot climates split)
+            return moisture >= 0.5f ? TileBiomes.Forest : TileBiomes.Desert;
         }
     }
 }

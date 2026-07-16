@@ -1686,7 +1686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b142b537eb68d248bb00e19b225be43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  moveSpeed: 5
+  moveSpeed: 12
 --- !u!1 &1219736650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1924,15 +1924,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::tiles.HexBiomeGenerator
   heightDetailLayerCount: 5
   heightDetailStrength: 1
-  heightDetailZoomMultiplier: 1.1
+  heightDetailZoomMultiplier: 0.9
   heightFeatureSize: 10
   heightNoiseOrigin: {x: 1000, y: 1000}
   heatDetailLayerCount: 3
   heatDetailStrength: 32
-  heatDetailZoomMultiplier: 1.1
+  heatDetailZoomMultiplier: 0.9
   heatFeatureSize: 20
   heatNoiseOrigin: {x: 5000, y: 5000}
-  elevationCoolingEffect: 0.35
+  moistureDetailLayerCount: 3
+  moistureDetailStrength: 0.5
+  moistureDetailZoomMultiplier: 2
+  moistureFeatureSize: 14
+  moistureNoiseOrigin: {x: -4000, y: 2500}
   latitudeInfluence: 0.7
   seaLevel: -2
   mountainLevel: 3
@@ -2914,7 +2918,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.99478966, b: 0.9292453, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -2924,7 +2928,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.7
+    m_Strength: 0.82
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 5
@@ -3048,7 +3052,7 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: e2ac3c8372362d442ae0c96c36544993, type: 2}
   - Key: 5
     Value: {fileID: 11400000, guid: 75a0b5365ee2e4a4bb7db56b19867868, type: 2}
-  heatColorGradient: {fileID: 2800000, guid: 9ab82faafc7606449a1b8c738122211e, type: 3}
+  heatColorGradient: {fileID: 2800000, guid: b209e805d6287c442b9ea58979a59f94, type: 3}
 --- !u!1 &2081530252
 GameObject:
   m_ObjectHideFlags: 0

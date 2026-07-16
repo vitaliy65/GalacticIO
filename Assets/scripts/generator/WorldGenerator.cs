@@ -91,8 +91,9 @@ namespace tiles
             Vector3 worldPosition = hexGrid.GetCellCenterWorld(new Vector3Int(col, row, 0));
 
             float Height = biomeGenerator.SampleHeight(worldPosition);
-            float heat = biomeGenerator.SampleHeat(worldPosition, Height);
-            TileBiomes biome = BiomeGenerator.PickBiome(Height, heat);
+            float heat = biomeGenerator.SampleHeat(worldPosition);
+            float moisture = biomeGenerator.SampleMoisture(worldPosition);
+            TileBiomes biome = BiomeGenerator.PickBiome(Height, heat, moisture);
 
             if (biome == TileBiomes.Ocean)
             {
