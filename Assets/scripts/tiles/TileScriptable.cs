@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace tiles
 {
-    [CreateAssetMenu(fileName = "TileScriptable", menuName = "Scriptable Objects/TileScriptable")]
+    [CreateAssetMenu(fileName = "TileScriptable", menuName = "Game/Tiles/TileScriptable")]
     public class TileScriptable : ScriptableObject
     {
         [SerializeField] private TileTypes tileType = TileTypes.Ground;

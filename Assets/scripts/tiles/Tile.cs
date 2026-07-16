@@ -53,7 +53,7 @@ public class Tile : TileBehavior
     {
         if (TileState == TileStates.Empty)
         {
-            GameObject currentBuilding = Instantiate(building.BuildingData.BuildingPrefab, BuildAnchorPoint.transform, false);
+            GameObject currentBuilding = Instantiate(building.BuildingData.BuildingPrefab, SpawnAnchorPoint.transform, false);
             currentBuilding.GetComponent<Building>().IsPlacedOnResource = tileResourceData;
             TileBuilding = currentBuilding.GetComponent<Building>();
         }
@@ -62,10 +62,10 @@ public class Tile : TileBehavior
     }
     public override bool OnTileRemoved()
     {
-        if (BuildAnchorPoint.transform.childCount > 0)
+        if (SpawnAnchorPoint.transform.childCount > 0)
         {
             TileBuilding = null;
-            Transform child = BuildAnchorPoint.transform.GetChild(0);
+            Transform child = SpawnAnchorPoint.transform.GetChild(0);
 
             // Unregister before destroying so BuildingManager never holds on to
             // a reference to a Building whose GameObject no longer exists.

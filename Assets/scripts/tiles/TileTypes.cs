@@ -4,7 +4,7 @@ namespace tiles
     {
         Desert,
         Forest,
-        Grassland,
+        Plains,
         Mountain,
         Ocean,
         Tundra,
@@ -13,7 +13,6 @@ namespace tiles
     public enum TileTypes
     {
         Ground,
-        Forest,
         Water,
         Ore,
     }

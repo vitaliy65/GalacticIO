@@ -35,7 +35,7 @@ namespace tiles
         [SerializeField]
         protected GameObject OutlinedPart;
         [SerializeField]
-        protected GameObject BuildAnchorPoint;
+        protected GameObject SpawnAnchorPoint;
         [Tooltip("The tile's own surface/ground mesh renderer - assign the child that shows the tile's material (not the outline, not the building anchor). Used by WorldGenerator to apply a biome's material.")]
         [SerializeField]
         protected MeshRenderer MaterialRenderer;
@@ -43,39 +43,13 @@ namespace tiles
         public bool isSelected { get; set; }
         public bool isHovered { get; set; }
 
+        [SerializeField]
+        public float Height;
+        [SerializeField]
+        public float Heat;
 
-        public float Height { get; private set; }
-        public float Heat { get; private set; }
-
-        public void SetGeneratedMapData(float height, float heat)
-        {
-            Height = height;
-            Heat = heat;
-            if (!TileData.Type.Equals(TileTypes.Water))
-                transform.position = new Vector3(transform.position.x, Height, transform.position.z);
-        }
-
-        /// <summary>
-        /// One-call setup for a tile spawned by WorldGenerator: assigns its
-        /// gameplay data, its resource (if any), applies the biome's material to
-        /// groundRenderer, and stores the height/heat that produced this result.
-        /// </summary>
-        public void InitializeFromWorldGenerator(
-            TileScriptable generatedTileData,
-            ResourceData generatedResourceData,
-            Material biomeMaterial,
-            float height,
-            float heat)
-        {
-            tileData = generatedTileData;
-            tileResourceData = generatedResourceData;
-            SetGeneratedMapData(height, heat);
-
-            if (MaterialRenderer && biomeMaterial)
-            {
-                MaterialRenderer.material = biomeMaterial;
-            }
-        }
+        private static readonly int BaseColorPropertyId = Shader.PropertyToID("_TileColor");
+        private MaterialPropertyBlock materialPropertyBlock;
 
         // Expose read-only accessors so other systems can decide UI/logic without
         // changing the protected serialized fields directly.
@@ -99,5 +73,61 @@ namespace tiles
         public abstract void OnTileUnhovered();
         public abstract void OnTilePlaced(Building building);
         public abstract bool OnTileRemoved();
+
+        public void SetGeneratedMapData(float height, float heat, TileBiomes tileBiome)
+        {
+            Height = height;
+            Heat = heat;
+
+            switch (tileBiome)
+            {
+                case TileBiomes.Mountain:
+                    transform.position = new Vector3(transform.position.x, Height + 0.25f, transform.position.z);
+                    break;
+                default:
+                    transform.position = new Vector3(transform.position.x, Height, transform.position.z);
+                    break;
+            }
+
+            ApplyHeatColor(TileUtils.GetColor(height, heat));
+        }
+
+        public void ApplyHeatColor(Color color)
+        {
+            if (!MaterialRenderer)
+            {
+                return;
+            }
+
+            materialPropertyBlock ??= new MaterialPropertyBlock();
+            MaterialRenderer.GetPropertyBlock(materialPropertyBlock);
+            materialPropertyBlock.SetColor(BaseColorPropertyId, color);
+            MaterialRenderer.SetPropertyBlock(materialPropertyBlock);
+        }
+
+        public void InitializeFromWorldGenerator(
+            TileScriptable generatedTileData,
+            ResourceData generatedResourceData,
+            float height,
+            float heat,
+            TileBiomes tileBiome)
+        {
+            tileData = generatedTileData;
+            tileResourceData = generatedResourceData;
+            SetGeneratedMapData(height, heat, tileBiome);
+        }
+
+        public void AddEnvironment(GameObject obj)
+        {
+            if (obj)
+            {
+                GameObject objGen = Instantiate(obj, SpawnAnchorPoint.transform, false);
+                objGen.transform.rotation = EmbientGenerator.ApplyRandomRotation();
+            }
+        }
+
+        public void RemoveEnvironment(GameObject obj)
+        {
+        }
     }
 }

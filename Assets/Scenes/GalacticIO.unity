@@ -639,7 +639,7 @@ Transform:
   m_GameObject: {fileID: 393303718}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -21.56171, y: 0.06008, z: 16.33791}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -660,12 +660,12 @@ MonoBehaviour:
   hexGrid: {fileID: 12349333}
   tilePrefab: {fileID: 2270916791595784570, guid: ab803555297a3344bb4b0ac86bcb5e91, type: 3}
   tilesParent: {fileID: 1099896241}
-  mapWidthInTiles: 100
-  mapHeightInTiles: 100
+  mapWidthInTiles: 60
+  mapHeightInTiles: 60
   biomeGenerator: {fileID: 1260748752}
   oreClusterFeatureSize: 4
-  oreClusterThreshold: 0.8
-  oreClusterNoiseOrigin: {x: 5000, y: 5000}
+  oreClusterThreshold: 0.7
+  oreClusterNoiseOrigin: {x: 0, y: 0}
 --- !u!1 &423510017
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,8 +695,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1260748751}
   - {fileID: 393303719}
+  - {fileID: 1260748751}
+  - {fileID: 1720756708}
   - {fileID: 1948113344}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1443,12 +1444,12 @@ TilemapRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 2
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 16, y: 16, z: 16}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
-  m_Mode: 0
-  m_DetectChunkCullingBounds: 1
+  m_Mode: 2
+  m_DetectChunkCullingBounds: 0
 --- !u!1839735485 &1099896243
 Tilemap:
   m_ObjectHideFlags: 0
@@ -1547,6 +1548,7 @@ GameObject:
   - component: {fileID: 1209009240}
   - component: {fileID: 1209009239}
   - component: {fileID: 1209009238}
+  - component: {fileID: 1209009242}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1637,11 +1639,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 24.6
+  near clip plane: 0
+  far clip plane: 100
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1666,12 +1668,25 @@ Transform:
   m_GameObject: {fileID: 1209009237}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: 0.23456976, z: -0.10938167, w: 0.8754261}
-  m_LocalPosition: {x: 20, y: 12, z: 10}
+  m_LocalPosition: {x: 1.4, y: 12, z: 34.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: 30, z: 0}
+--- !u!114 &1209009242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1209009237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b142b537eb68d248bb00e19b225be43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  moveSpeed: 5
 --- !u!1 &1219736650
 GameObject:
   m_ObjectHideFlags: 0
@@ -1889,7 +1904,7 @@ Transform:
   m_GameObject: {fileID: 1260748750}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -21.56171, y: 0.06008, z: 16.33791}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2615,6 +2630,51 @@ Transform:
   - {fileID: 1638518159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 30, z: 0}
+--- !u!1 &1720756707
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1720756708}
+  - component: {fileID: 1720756709}
+  m_Layer: 0
+  m_Name: EmbientGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1720756708
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720756707}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 423510018}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1720756709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720756707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be1ec22c6b555d944a585feaf3b64ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  ForestEnvironmentList: {fileID: 11400000, guid: 97268e4ac9380594a9474a755d5cc4dc, type: 2}
 --- !u!1 &1752638662
 GameObject:
   m_ObjectHideFlags: 0
@@ -2854,7 +2914,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 13
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -2864,10 +2924,10 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.7
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 5
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -2898,7 +2958,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 6570
+  m_ColorTemperature: 6000
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -2968,41 +3028,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad2f47ac3e5702b4682f779d20f2ca09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::tiles.TileUtils
-  biomeResourceMapping:
-  - Key: 1
-    Value: {fileID: 11400000, guid: 2fec330f5a34baf4aa79037a00ff9508, type: 2}
+  TileTypeMapping:
   - Key: 0
-    Value: {fileID: 11400000, guid: 5411fe822b8ad434890fa8abc248f077, type: 2}
-  - Key: 3
-    Value: {fileID: 11400000, guid: 5e61163b5cf46c8409f5d26932487711, type: 2}
-  - Key: 2
+    Value: {fileID: 11400000, guid: d46e8f7091684d44cad2dfc281338db2, type: 2}
+  - Key: 1
     Value: {fileID: 11400000, guid: 6719e3c42800bde4e990b48d34a8abcc, type: 2}
+  - Key: 2
+    Value: {fileID: 11400000, guid: 5e61163b5cf46c8409f5d26932487711, type: 2}
   biomeResourceDataMapping:
   - Key: 0
     Value: {fileID: 11400000, guid: 82d7e6d0e3fb6c8428778d1f809fc17d, type: 2}
   - Key: 1
-    Value: {fileID: 11400000, guid: 5648992bfc4a21c429a6c95509710e8c, type: 2}
-  - Key: 2
     Value: {fileID: 11400000, guid: 5e0cb74834f62fa468b2b0d8f12d8698, type: 2}
+  - Key: 2
+    Value: {fileID: 11400000, guid: 5648992bfc4a21c429a6c95509710e8c, type: 2}
   - Key: 3
     Value: {fileID: 11400000, guid: 4226c2efe30440c4db4ea0631ba2ad39, type: 2}
   - Key: 4
     Value: {fileID: 11400000, guid: e2ac3c8372362d442ae0c96c36544993, type: 2}
   - Key: 5
     Value: {fileID: 11400000, guid: 75a0b5365ee2e4a4bb7db56b19867868, type: 2}
-  biomeMaterialMapping:
-  - Key: 0
-    Value: {fileID: 2100000, guid: 50bd28ecfb18217489373c98c0e4bd4e, type: 2}
-  - Key: 1
-    Value: {fileID: 2100000, guid: ae765a4c5d57a8d47846beb5c60b75f1, type: 2}
-  - Key: 2
-    Value: {fileID: 2100000, guid: 1199229c4034999438a464acb9da565b, type: 2}
-  - Key: 3
-    Value: {fileID: 2100000, guid: 0e4081db3e8a98045af42d4d43bec2cc, type: 2}
-  - Key: 4
-    Value: {fileID: 2100000, guid: 7375a943e98216148a2a11e61e7c032b, type: 2}
-  - Key: 5
-    Value: {fileID: 2100000, guid: 7ad3516ba6a030342afa278b0a095c2b, type: 2}
+  heatColorGradient: {fileID: 2800000, guid: 9ab82faafc7606449a1b8c738122211e, type: 3}
 --- !u!1 &2081530252
 GameObject:
   m_ObjectHideFlags: 0
@@ -3028,7 +3074,7 @@ Transform:
   m_GameObject: {fileID: 2081530252}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.56171, y: 0.06008, z: 16.33791}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

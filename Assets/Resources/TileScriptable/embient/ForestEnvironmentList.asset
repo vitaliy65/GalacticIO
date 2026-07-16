@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c63b3a5ee9e6e8d42b4296cc5e0f5011, type: 3}
+  m_Name: ForestEnvironmentList
+  m_EditorClassIdentifier: Assembly-CSharp::EnvironmentList
+  EnvironmentMaping:
+  - Key: 0.8
+    Value: {fileID: 3223662407599668684, guid: a5edcc9cfab839c4894252bc62d386c1, type: 3}
+  - Key: 0.55
+    Value: {fileID: 1784240998593509404, guid: 11f524f31680e154fadd68e854c24f9b, type: 3}
+  OrePrefab: {fileID: 4666177408615538327, guid: 7777aba2ab6d5b64c96e0acc8792c3e0, type: 3}

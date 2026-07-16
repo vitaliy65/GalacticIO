@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7afb04bb5b7e01449253078bceb4839, type: 3}
   m_Name: WaterTile
   m_EditorClassIdentifier: Assembly-CSharp::tiles.TileScriptable
-  tileType: 2
+  tileType: 1
   _canBePlacedOn: 0
   _health: 0
