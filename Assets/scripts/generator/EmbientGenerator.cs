@@ -1,11 +1,11 @@
+using System.Collections.Generic;
 using tiles;
 using UnityEngine;
 
 public class EmbientGenerator : Generator
 {
     [SerializeField]
-    public EnvironmentList ForestEnvironmentList;
-
+    public List<SerializablePair<TileBiomes, EnvironmentList>> BiomeEnvironmentLists = new List<SerializablePair<TileBiomes, EnvironmentList>>();
     public static EmbientGenerator Instance { get; private set; }
 
     private void Awake()
@@ -27,31 +27,15 @@ public class EmbientGenerator : Generator
 
     public GameObject GenerateEnvironment(TileBiomes biome, TileSubBiomes subBiome, bool isOre)
     {
-        switch (biome)
-        {
-            case TileBiomes.Desert:
-                break;
-            case TileBiomes.Grassland:
-                switch (subBiome)
-                {
-                    case TileSubBiomes.Hills: return null;
-                    case TileSubBiomes.Plains: return null;
-                    default: return CalculateSpawn(isOre, ForestEnvironmentList);
-                }
-            case TileBiomes.Ocean:
-                break;
-            case TileBiomes.Tundra:
-                break;
-            default: return null;
-        }
+        var list = BiomeEnvironmentLists.Find(el => el.Key == biome && el.Value != null && el.Value.subBiome == subBiome);
 
-        return null;
+        return CalculateSpawn(isOre, list.Value);
     }
 
     private GameObject CalculateSpawn(bool isOre, EnvironmentList list)
     {
         if (isOre)
-            return list.OrePrefab;
+            return TileUtils.GetResourcePrefabFromBiome(list.mainBiome);
 
         if (list.EnvironmentMaping == null || list.EnvironmentMaping.Count == 0)
             return null;
@@ -67,7 +51,8 @@ public class EmbientGenerator : Generator
         {
             current += option.Key;
             if (roll <= current)
-                return option.Value;
+                if (option.Value)
+                    return option.Value;
         }
 
         return null;
@@ -75,7 +60,9 @@ public class EmbientGenerator : Generator
 
     public static Quaternion ApplyRandomRotation()
     {
-        return Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+        float angle = Random.Range(0f, 360f);
+        float snappedAngle = Mathf.Round(angle / 45f) * 45f;
+        return Quaternion.Euler(0f, snappedAngle, 0f);
     }
 
 }

@@ -22,6 +22,9 @@ namespace tiles
         private List<SerializablePair<TileBiomes, ResourceData>> biomeResourceDataMapping = new List<SerializablePair<TileBiomes, ResourceData>>();
 
         [SerializeField]
+        private List<SerializablePair<TileBiomes, GameObject>> biomeResourcePrefabMapping = new List<SerializablePair<TileBiomes, GameObject>>();
+
+        [SerializeField]
         private HeatmapList heatmapList;
 
         public static TileUtils Instance { get; private set; }
@@ -68,11 +71,28 @@ namespace tiles
             return null;
         }
 
+        public static GameObject GetResourcePrefabFromBiome(TileBiomes biome)
+        {
+            foreach (var mapping in Instance.biomeResourcePrefabMapping)
+            {
+                if (mapping.Key == biome)
+                {
+                    return mapping.Value;
+                }
+            }
+            return null;
+        }
+
 
         public static Color GetColor(float height, TileBiomes biome)
         {
             // Ограничиваем на всякий случай в диапазоне [0, 1]
             float pixelCoordinate = Mathf.Clamp01(height);
+
+            if (pixelCoordinate >= 0.99)
+            {
+                pixelCoordinate -= 0.01f;
+            }
 
             Texture2D heatColorGradient = null;
 

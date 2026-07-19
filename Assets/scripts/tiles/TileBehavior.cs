@@ -48,6 +48,8 @@ namespace tiles
         [SerializeField]
         public float Heat;
         [SerializeField]
+        public float Moisture;
+        [SerializeField]
         public TileBiomes Biome;
         [SerializeField]
         public TileSubBiomes SubBiome;
@@ -116,11 +118,13 @@ namespace tiles
             ResourceData generatedResourceData,
             float height,
             float heat,
+            float moisture,
             TileBiomes tileBiome,
             TileSubBiomes subBiome)
         {
             tileData = generatedTileData;
             tileResourceData = generatedResourceData;
+            Moisture = moisture;
             SetGeneratedMapData(height, heat, tileBiome, subBiome);
         }
 

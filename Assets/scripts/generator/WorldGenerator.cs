@@ -67,6 +67,11 @@ namespace tiles
                 Instance = null;
         }
 
+        public void Start()
+        {
+            GenerateWorld();
+        }
+
         [ContextMenu("Generate World")]
         public void GenerateWorld()
         {
@@ -121,7 +126,7 @@ namespace tiles
 
 
             Tile tile = spawnedTile.GetComponent<Tile>();
-            tile.InitializeFromWorldGenerator(tileData, resourceData, Height, heat, biome, subBiome);
+            tile.InitializeFromWorldGenerator(tileData, resourceData, Height, heat, moisture, biome, subBiome);
             tile.AddEnvironment(EmbientGenerator.Instance.GenerateEnvironment(biome, subBiome, isOreCluster));
         }
 
