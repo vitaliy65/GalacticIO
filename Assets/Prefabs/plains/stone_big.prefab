@@ -82,34 +82,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5341eb32ed6d13748b6b8f7e7dbc82ac, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 5341eb32ed6d13748b6b8f7e7dbc82ac, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 2147483647
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 5341eb32ed6d13748b6b8f7e7dbc82ac, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4123805223869229244}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5341eb32ed6d13748b6b8f7e7dbc82ac, type: 3}
---- !u!1 &7268321035347433076 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 5341eb32ed6d13748b6b8f7e7dbc82ac, type: 3}
-  m_PrefabInstance: {fileID: 1554552526597805052}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4123805223869229244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7268321035347433076}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfa813d54935c7c4dbc94e3e58b5b2d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler

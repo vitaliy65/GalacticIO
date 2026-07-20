@@ -12,13 +12,12 @@ GameObject:
   - component: {fileID: 4198035917759539618}
   - component: {fileID: 342557717631420970}
   - component: {fileID: -946424813869297114}
-  - component: {fileID: 4916205931157857245}
   m_Layer: 0
   m_Name: testModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1533519398127303373
 Transform:
@@ -107,15 +106,3 @@ MonoBehaviour:
   buildingData: {fileID: 11400000, guid: db367de5613dcf4438fbed39306f2af8, type: 2}
   level: 1
   isPlacedOnResource: {fileID: 0}
---- !u!114 &4916205931157857245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 609939646679195352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfa813d54935c7c4dbc94e3e58b5b2d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GPUInstancingEnabler
