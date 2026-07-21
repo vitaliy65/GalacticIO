@@ -14,7 +14,6 @@ namespace tiles
         Plains,
         Hills,
         Forest,
-        Oasis,
     }
 
     public enum TileTypes

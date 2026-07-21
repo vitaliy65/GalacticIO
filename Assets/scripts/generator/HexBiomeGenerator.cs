@@ -67,13 +67,6 @@ namespace tiles
         [Tooltip("Moisture above which a Plains ('Grassland') tile becomes the Forest sub-biome instead of flat Plains.")]
         [SerializeField, Range(0f, 1f)] private float forestMoistureThreshold = 0.6f;
 
-        [Header("Oasis (rare Desert sub-biome)")]
-        [Tooltip("Size of oasis patches, in world units - kept small so they're rare, isolated spots rather than following the desert's overall shape.")]
-        [SerializeField] private float oasisFeatureSize = 5f;
-        [Tooltip("How high the oasis noise has to be for a tile to count as an oasis, 0-1. Higher = rarer.")]
-        [SerializeField, Range(0f, 1f)] private float oasisThreshold = 0.85f;
-        [SerializeField] private Vector2 oasisNoiseOrigin = new Vector2(8000f, -3000f);
-
         public float SeaLevel => seaLevel;
         public float MountainLevel => mountainLevel;
 
@@ -181,10 +174,6 @@ namespace tiles
                     return TileSubBiomes.Plains;
 
                 case TileBiomes.Desert:
-                    if (IsOasis(worldPosition))
-                    {
-                        return TileSubBiomes.Oasis;
-                    }
                     if (height >= hillsHeightThreshold)
                     {
                         return TileSubBiomes.Hills;
@@ -202,17 +191,6 @@ namespace tiles
                     // Ocean, Mountain - no finer subdivision.
                     return TileSubBiomes.None;
             }
-        }
-
-
-        private bool IsOasis(Vector3 worldPosition)
-        {
-            float noise = NoiseUtils.FractalNoise(
-                worldPosition.x, worldPosition.z,
-                octaves: 2, persistence: 0.5f, lacunarity: 2f,
-                scale: oasisFeatureSize, offset: oasisNoiseOrigin);
-
-            return noise > oasisThreshold;
         }
     }
 }
