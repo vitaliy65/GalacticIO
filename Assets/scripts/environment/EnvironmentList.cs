@@ -13,4 +13,14 @@ public class EnvironmentList : ScriptableObject
     // A float value represents the percentage change of spawning a particular GameObject
     [SerializeField]
     public List<SerializablePair<float, GameObject>> EnvironmentMaping = new List<SerializablePair<float, GameObject>>();
+
+    [SerializeField]
+    public float maxScaleCoefficient = 1f;
+    [SerializeField]
+    public float minScaleCoefficient = 0.9f;
+
+    [SerializeField]
+    public Vector2 maxOffsetFromCenter = new Vector2(0.5f, 0.5f);
+    [SerializeField]
+    public Vector2 minOffsetFromCenter = new Vector2(0.1f, 0.1f);
 }

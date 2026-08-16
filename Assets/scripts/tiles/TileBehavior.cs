@@ -134,6 +134,8 @@ namespace tiles
             {
                 GameObject objGen = Instantiate(obj, SpawnAnchorPoint.transform, false);
                 objGen.transform.rotation = EmbientGenerator.ApplyRandomRotation();
+                objGen.transform.localScale = EmbientGenerator.ApplyRandomScale(objGen.transform.localScale);
+                objGen.transform.position = EmbientGenerator.ApplyRandomOffset(objGen.transform.position);
             }
         }
 

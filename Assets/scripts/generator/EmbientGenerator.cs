@@ -6,6 +6,7 @@ public class EmbientGenerator : Generator
 {
     [SerializeField]
     public List<SerializablePair<TileBiomes, EnvironmentList>> BiomeEnvironmentLists = new List<SerializablePair<TileBiomes, EnvironmentList>>();
+    public static EnvironmentList currentEnvironmentList;
     public static EmbientGenerator Instance { get; private set; }
 
     private void Awake()
@@ -28,6 +29,9 @@ public class EmbientGenerator : Generator
     public GameObject GenerateEnvironment(TileBiomes biome, TileSubBiomes subBiome, bool isOre)
     {
         var list = BiomeEnvironmentLists.Find(el => el.Key == biome && el.Value != null && el.Value.subBiome == subBiome);
+
+        if (currentEnvironmentList != list.Value)
+            currentEnvironmentList = list.Value;
 
         return CalculateSpawn(isOre, list.Value);
     }
@@ -65,4 +69,16 @@ public class EmbientGenerator : Generator
         return Quaternion.Euler(0f, snappedAngle, 0f);
     }
 
+    public static Vector3 ApplyRandomScale(Vector3 currentScale)
+    {
+        float scale = Random.Range(currentEnvironmentList.minScaleCoefficient, currentEnvironmentList.maxScaleCoefficient);
+        return new Vector3(currentScale.x * scale, currentScale.y * scale, currentScale.z * scale);
+    }
+
+    public static Vector3 ApplyRandomOffset(Vector3 currentPosition)
+    {
+        float offsetX = Random.Range(currentEnvironmentList.minOffsetFromCenter.x, currentEnvironmentList.maxOffsetFromCenter.x);
+        float offsetZ = Random.Range(currentEnvironmentList.minOffsetFromCenter.y, currentEnvironmentList.maxOffsetFromCenter.y);
+        return new Vector3(currentPosition.x + offsetX, currentPosition.y, currentPosition.z + offsetZ);
+    }
 }
