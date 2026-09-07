@@ -7,7 +7,7 @@ namespace tiles
     ///
     /// Two ways to use it:
     /// - Generate() - post-processes tiles that already exist in the scene
-    ///   (via TileBehavior.AllTiles), e.g. hand-painted ones.
+    ///   (via TileRegistry.AllTiles), e.g. hand-painted ones.
     /// - SampleHeight()/SampleHeat() - compute a value for an arbitrary world
     ///   position, for code that needs the answer BEFORE a tile exists there
     ///   (e.g. WorldGenerator, deciding what to spawn at each grid cell).
@@ -93,7 +93,7 @@ namespace tiles
         [ContextMenu("Generate Height & Heat For Existing Tiles")]
         public void Generate()
         {
-            foreach (var tile in TileBehavior.AllTiles)
+            foreach (var tile in TileRegistry.AllTiles)
             {
                 Vector3 worldPosition = tile.transform.position;
 
@@ -143,19 +143,19 @@ namespace tiles
                 return TileBiomes.Ocean;
             }
 
-            if (heat <= 0.5f)
-            {
-                return TileBiomes.Tundra; // Cold
-            }
+            // if (heat <= 0.5f)
+            // {
+            //     return TileBiomes.Tundra; // Cold
+            // }
 
-            if (heat <= 0.65f)
-            {
-                return TileBiomes.Grassland; // Temperate - "Grassland" climate
-            }
-
+            // if (heat <= 0.65f)
+            // {
+            //     return TileBiomes.Grassland; // Temperate - "Grassland" climate
+            // }
+            return TileBiomes.Grassland;
             // Hot: dry -> desert, wet -> still Plains climate (Forest sub-biome
             // picks it up via moisture, see PickSubBiome)
-            return moisture >= 0.5f ? TileBiomes.Grassland : TileBiomes.Desert;
+            // return moisture >= 0.5f ? TileBiomes.Grassland : TileBiomes.Desert;
         }
 
         public TileSubBiomes PickSubBiome(TileBiomes biome, float height, float moisture, Vector3 worldPosition)
@@ -184,6 +184,10 @@ namespace tiles
                     if (height >= hillsHeightThreshold)
                     {
                         return TileSubBiomes.Hills;
+                    }
+                    if (moisture >= forestMoistureThreshold)
+                    {
+                        return TileSubBiomes.Forest;
                     }
                     return TileSubBiomes.Plains;
 

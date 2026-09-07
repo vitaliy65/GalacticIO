@@ -16,4 +16,16 @@ MonoBehaviour:
   subBiome: 2
   EnvironmentMaping:
   - Key: 1
+    Value: {fileID: 6955406489244167663, guid: ad81538b6757c9746a795ce17ccb7ee1, type: 3}
+  - Key: 1
+    Value: {fileID: 7436326624384810106, guid: 4f09e9e54ced4504aa6c5898c3680850, type: 3}
+  - Key: 1
+    Value: {fileID: 3904812838041529672, guid: 4cee476be54bf2f4795fc0c282e0c82c, type: 3}
+  - Key: 1
+    Value: {fileID: 2245652763723674070, guid: 6fd1e66987cc9514594d0fd0e276eae0, type: 3}
+  - Key: 0.5
     Value: {fileID: 0}
+  maxScaleCoefficient: 1
+  minScaleCoefficient: 0.9
+  maxOffsetFromCenter: {x: 0.12, y: 0.12}
+  minOffsetFromCenter: {x: 0, y: 0}

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using builds;
 
@@ -49,6 +50,8 @@ namespace tiles
         [SerializeField] private Vector2 oreClusterNoiseOrigin = new Vector2(5000f, 5000f);
 
         public static WorldGenerator Instance { get; private set; }
+        public static event Action OnWorldGenerationStart;
+        public static event Action OnWorldGenerationEnd;
 
         private void Awake()
         {
@@ -80,6 +83,7 @@ namespace tiles
                 return;
             }
 
+            OnWorldGenerationStart?.Invoke();
             ClearTilesParentChildren();
 
             for (int row = 0; row < mapHeightInTiles; row++)
@@ -89,6 +93,8 @@ namespace tiles
                     SpawnTile(col, row);
                 }
             }
+
+            OnWorldGenerationEnd?.Invoke();
         }
 
         private void SpawnTile(int col, int row)
@@ -121,7 +127,7 @@ namespace tiles
                 Debug.LogWarning($"WorldGenerator: no TileScriptable mapped for {tileType} in TileUtils - cell ({col},{row}) will be spawned without tile data.", this);
             }
 
-            GameObject spawnedTile = Instantiate(tilePrefab, worldPosition, Quaternion.identity, tilesParent);
+            GameObject spawnedTile = Instantiate(tilePrefab, worldPosition, tilePrefab.transform.rotation, tilesParent);
             spawnedTile.name = $"Tile_{col}_{row}_{biome}_{subBiome}";
 
 

@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: OceanMaterial 1
-  m_Shader: {fileID: 4800000, guid: d2714a344a4eeed45884d54d36ac3cc6, type: 3}
+  m_Shader: {fileID: 4800000, guid: ccc30ec4df23ba74c87c839c498b8112, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,11 +25,11 @@ Material:
     m_TexEnvs:
     - _SurfaceDistortion:
         m_Texture: {fileID: 2800000, guid: f07a6d8c36a66e847b8fad96a1379a70, type: 3}
-        m_Scale: {x: 150, y: 300}
+        m_Scale: {x: 300, y: 300}
         m_Offset: {x: 0, y: 0}
     - _SurfaceNoise:
         m_Texture: {fileID: 2800000, guid: b9dc737e07fa26e4fb2c276518b40b93, type: 3}
-        m_Scale: {x: 150, y: 150}
+        m_Scale: {x: 300, y: 300}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:

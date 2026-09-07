@@ -15,5 +15,21 @@ MonoBehaviour:
   mainBiome: 3
   subBiome: 3
   EnvironmentMaping:
+  - Key: 7
+    Value: {fileID: 7241000062503465662, guid: 923829ea79908444fa05a21dd04162f0, type: 3}
+  - Key: 5
+    Value: {fileID: 2542521466219948291, guid: b7108fc93c20d65479633bddeb181ecf, type: 3}
+  - Key: 3
+    Value: {fileID: 1713121915270436224, guid: 213375e56acedb345ac3d371db948d57, type: 3}
   - Key: 1
+    Value: {fileID: 2520272362105191299, guid: 60a4592ff005ebb46a48898342440f31, type: 3}
+  - Key: 1
+    Value: {fileID: 7039938567054970923, guid: 79b424e684a8e2443b0e6780c3d4027a, type: 3}
+  - Key: 1
+    Value: {fileID: 2929313617436132047, guid: 7f586313ec7899748b3e631d123761d3, type: 3}
+  - Key: 2
     Value: {fileID: 0}
+  maxScaleCoefficient: 1
+  minScaleCoefficient: 0.9
+  maxOffsetFromCenter: {x: 0.12, y: 0.12}
+  minOffsetFromCenter: {x: 0, y: 0}

@@ -17,6 +17,6 @@ MonoBehaviour:
   baseCost: 128
   incomeModifier: 1
   sprite: {fileID: 0}
-  buildingPrefab: {fileID: 609939646679195352, guid: 789d9376fa772ee4ca42a6f031d04bcc, type: 3}
+  buildingPrefab: {fileID: 1636051552999905336, guid: 543c163dcc3c8dc4f85873f6a9e3bcaa, type: 3}
   CanBePlacedOnResources:
   - {fileID: 11400000, guid: 5648992bfc4a21c429a6c95509710e8c, type: 2}

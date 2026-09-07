@@ -83,21 +83,19 @@ namespace builds
         public bool RemoveBuilding(Building building)
         {
             if (!building)
-            {
                 return false;
-            }
 
-
-            if (builtBuildings.Count == 1)
+            if (building.CanSell() == true)
             {
-                CurrencyManager.Instance.AddCoins(CurrencyManager.Instance.StartingCoinBalance);
-            }
-            else
-            {
-                CurrencyManager.Instance.AddCoins(building.GetSellValue());
+                if (builtBuildings.Count == 1)
+                    CurrencyManager.Instance.AddCoins(CurrencyManager.Instance.StartingCoinBalance);
+                else
+                    CurrencyManager.Instance.AddCoins(building.GetSellValue());
+
+                return builtBuildings.Remove(building);
             }
 
-            return builtBuildings.Remove(building);
+            return false;
         }
 
         private void ApplyIncome(int totalIncome)

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using builds;
 using UnityEngine;
 
@@ -6,18 +5,14 @@ namespace tiles
 {
     public abstract class TileBehavior : MonoBehaviour
     {
-        private static readonly HashSet<TileBehavior> allTiles = new HashSet<TileBehavior>();
-
-        public static IReadOnlyCollection<TileBehavior> AllTiles => allTiles;
-
         protected virtual void OnEnable()
         {
-            allTiles.Add(this);
+            TileRegistry.Register(this);
         }
 
         protected virtual void OnDisable()
         {
-            allTiles.Remove(this);
+            TileRegistry.Unregister(this);
         }
 
         [SerializeField]
@@ -29,13 +24,7 @@ namespace tiles
         [SerializeField]
         protected ResourceData tileResourceData;
         [SerializeField]
-        protected Material SelectedMaterial;
-        [SerializeField]
-        protected Material HoveredMaterial;
-        [SerializeField]
-        protected GameObject OutlinedPart;
-        [SerializeField]
-        protected GameObject SpawnAnchorPoint;
+        public GameObject SpawnAnchorPoint;
         [Tooltip("The tile's own surface/ground mesh renderer - assign the child that shows the tile's material (not the outline, not the building anchor). Used by WorldGenerator to apply a biome's material.")]
         [SerializeField]
         protected MeshRenderer MaterialRenderer;
@@ -90,7 +79,7 @@ namespace tiles
             switch (SubBiome)
             {
                 case TileSubBiomes.Hills:
-                    transform.position = new Vector3(transform.position.x, Height + 0.25f, transform.position.z);
+                    transform.position = new Vector3(transform.position.x, Height + 0.15f, transform.position.z);
                     break;
                 default:
                     transform.position = new Vector3(transform.position.x, Height, transform.position.z);
@@ -142,5 +131,6 @@ namespace tiles
         public void RemoveEnvironment(GameObject obj)
         {
         }
+
     }
 }

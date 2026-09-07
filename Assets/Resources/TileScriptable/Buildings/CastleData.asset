@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6c9560d2897b18409fe1deef130d33a, type: 3}
+  m_Name: CastleData
+  m_EditorClassIdentifier: Assembly-CSharp::builds.BuildingData
+  buildingName: Blue Castle
+  title: Blue Castle
+  baseCost: 0
+  incomeModifier: 0
+  sprite: {fileID: 0}
+  buildingPrefab: {fileID: 6683886223823335675, guid: ea288fff0cc771749aa0abfa620a7dde, type: 3}
+  CanBePlacedOnResources:
+  - {fileID: 0}

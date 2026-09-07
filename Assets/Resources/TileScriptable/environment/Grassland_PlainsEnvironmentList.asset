@@ -15,9 +15,37 @@ MonoBehaviour:
   mainBiome: 1
   subBiome: 1
   EnvironmentMaping:
-  - Key: 0.05
-    Value: {fileID: 1824952463527079597, guid: 4936864e54c6b7c4bb4cbe7fd02bee4a, type: 3}
-  - Key: 0.05
-    Value: {fileID: 5327297749567794607, guid: e01a5de66934a7d42baf4efb17b89e4a, type: 3}
-  - Key: 0.95
+  - Key: 0.02
+    Value: {fileID: 4647800157468466413, guid: 54acda6ba9e93124e93afdda99d2514a, type: 3}
+  - Key: 0.02
+    Value: {fileID: 7171845942418626051, guid: 9c4f093679342d844afcccf7c2ea8c79, type: 3}
+  - Key: 0.02
+    Value: {fileID: 1239928623326664016, guid: 153615a1d50a7d54590506ff281b2a3d, type: 3}
+  - Key: 0.02
+    Value: {fileID: 3990112873496659605, guid: 3ae4852bcde773943a1724d2c27c5009, type: 3}
+  - Key: 0.02
+    Value: {fileID: 5779091901251546143, guid: 0bd937f1ca4399544a4602ef812f5196, type: 3}
+  - Key: 0.02
+    Value: {fileID: 6368308251112561369, guid: a81a6cf621cf4a54bbe1e03564cd52fe, type: 3}
+  - Key: 0.02
+    Value: {fileID: 1202030529606034811, guid: 2f41beeeedf61c145ad9e85cacc923cb, type: 3}
+  - Key: 0.02
+    Value: {fileID: 3255650855509341123, guid: a713e595f88478e499d57920b6733e51, type: 3}
+  - Key: 0.02
+    Value: {fileID: 7454927204916853567, guid: 80b9d23d020211443b57b63574ea2d5e, type: 3}
+  - Key: 0.02
+    Value: {fileID: 4097559384607908337, guid: 68706b66389859c42ae2fc05e54caf2a, type: 3}
+  - Key: 0.02
+    Value: {fileID: 7857140686911555403, guid: 3ef7adc57ecd0474ca6b4a20c088f8ec, type: 3}
+  - Key: 0.02
+    Value: {fileID: 5341270740555203340, guid: b1fca0c0da75438409c17a39fa3c954e, type: 3}
+  - Key: 0.02
+    Value: {fileID: 4497263334939930738, guid: 6dc25050c26cc264da7307c7cae63416, type: 3}
+  - Key: 0.02
+    Value: {fileID: 1839089875301089681, guid: b8fb1c8ee3c077f4db09d50c9c591713, type: 3}
+  - Key: 1
     Value: {fileID: 0}
+  maxScaleCoefficient: 1
+  minScaleCoefficient: 0.9
+  maxOffsetFromCenter: {x: 0.12, y: 0.12}
+  minOffsetFromCenter: {x: 0, y: 0}

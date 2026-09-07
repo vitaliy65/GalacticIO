@@ -1,13 +1,14 @@
 using currency;
+using tiles;
 using UnityEngine;
 
 namespace builds
 {
     public class Building : MonoBehaviour, IIncomeProvider
     {
-        [SerializeField] private BuildingData buildingData;
-        [SerializeField] private int level = 1;
-        [SerializeField] private ResourceData isPlacedOnResource;
+        [SerializeField] protected BuildingData buildingData;
+        [SerializeField] protected int level = 1;
+        [SerializeField] protected ResourceData isPlacedOnResource;
 
         private bool hasRegistered;
 
@@ -53,14 +54,14 @@ namespace builds
         public int GetSellValue()
         {
             if (!buildingData)
-            {
                 return 0;
-            }
 
             // Sell value is half of the total cost spent on this building.
             int totalCost = buildingData.BaseCost * level;
             return totalCost / 2;
         }
+
+        public virtual bool CanSell() { return true; }
 
         public float GetModifier()
         {

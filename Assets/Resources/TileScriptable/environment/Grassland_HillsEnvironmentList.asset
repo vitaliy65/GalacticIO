@@ -16,4 +16,26 @@ MonoBehaviour:
   subBiome: 2
   EnvironmentMaping:
   - Key: 1
+    Value: {fileID: 509270617784568362, guid: 3da1a8e1f4cd68f418e0f599f0f72a5d, type: 3}
+  - Key: 1
+    Value: {fileID: 4559827978247296769, guid: 42fa7a6c7a9c78942b03ac81c77d7bf6, type: 3}
+  - Key: 1
+    Value: {fileID: 7793204479895431149, guid: a5490c03c8408074b9a95a3acf03f73b, type: 3}
+  - Key: 0.8
+    Value: {fileID: 3673743862124112014, guid: 51f85d6a56ef5094a8f694850f1923c8, type: 3}
+  - Key: 0.8
+    Value: {fileID: 3364082834819748536, guid: c5dbe6430981a284595c02b804a1840e, type: 3}
+  - Key: 0.8
+    Value: {fileID: 1866954308633711124, guid: dda3e515894852446abf29bddceb9eed, type: 3}
+  - Key: 0.6
+    Value: {fileID: 3132724816930054318, guid: fa40506b7040f0a4696c8e078be0c0da, type: 3}
+  - Key: 0.6
+    Value: {fileID: 5440026561529981320, guid: 8229d1b1158b43d4ab623b5112f37e70, type: 3}
+  - Key: 0.6
+    Value: {fileID: 1115063565781061599, guid: 8320023e1c40bbd42ba9b132a61b9645, type: 3}
+  - Key: 0
     Value: {fileID: 0}
+  maxScaleCoefficient: 1
+  minScaleCoefficient: 0.9
+  maxOffsetFromCenter: {x: 0.12, y: 0.12}
+  minOffsetFromCenter: {x: 0, y: 0}
